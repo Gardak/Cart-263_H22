@@ -1,7 +1,7 @@
 // A class with the display characteristic of the space objects
 
 class SpaceObject {
-// Create the position, angle and image properties of the asteroids
+// Create the position, angle and image properties
   constructor(x, y, image, imgSize) {
     this.x = x;
     this.y = y;
@@ -19,7 +19,7 @@ class SpaceObject {
   }
 
   // display()
-  // Show and move the asteroid on the canvas
+  // Show and move the objects on the canvas
   display() {
     push();
 
@@ -32,7 +32,7 @@ class SpaceObject {
   }
 
   // mousePressed()
-  // Checks if this sausage dog was clicked and remembers it was found if so
+  // Checks if the player has clicked on an object
   mousePressed() {
     let overlapped = false;
     let d = dist(this.x, this.y, mouseX, mouseY);
@@ -46,4 +46,3 @@ class SpaceObject {
   }
 
 }
- 

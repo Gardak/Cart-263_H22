@@ -1,12 +1,12 @@
 // WormHole
-// An extension of the Animal class
-// Adds the idea of being found when clicked
-// and spinning when found
+// An extension of the SpaceObject class
+// the player has to find the wormhole to win the game
+// it hides behind the asteroids
 
 class WormHole extends SpaceObject {
   // constructor(x,y,image)
   // Calls the super constructor
-  // Adds properties for being found and for a rotation speed
+  // Adds properties for being found
   constructor(x, y, image, imgSize) {
     super(x, y, image, imgSize);
 
@@ -16,7 +16,7 @@ class WormHole extends SpaceObject {
   }
 
   // update()
-  // Calls the super update() and changes angle if found (to rotate!)
+  // Calls the super update() and rotates when found
   update() {
     if (this.found) {
       this.imgSize += this.expandSize;
@@ -25,8 +25,8 @@ class WormHole extends SpaceObject {
     super.update();
   }
 
+  // Changes the properties when the player finds the wormhole
   onOverlapClick() {
-    // do smth
     this.found = true;
 
     gameState = 'GAMEWIN';
@@ -34,4 +34,3 @@ class WormHole extends SpaceObject {
 
 
 }
- 

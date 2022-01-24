@@ -1,52 +1,56 @@
 "use strict";
 
 /*****************
-Where's Sausage Dog?
+Asteroid Escape
 Teacher: Pippin Barr
 Student: Alex Lorrain
 
-The player has to find his way through an asteroid field.
-Each time the player finds the portal to go through, the asteroid goes faster.
+The player has to find his way through an asteroid field to get to the wormhole.
 If the player clicks an asteroid he takes damage.
 ******************/
 
 // Constants for image loading
 const NUM_ASTEROID_IMG = 7;
-const ASTEROID_IMAGE_PREFIX = `assets/images/Asteroid-`;
-const WORM_HOLE_IMAGE = `assets/images/wormhole.png`;
+const ASTEROID_IMG_PREFIX = `assets/images/Asteroid-`;
+const WORMHOLE_IMG = `assets/images/wormhole.png`;
 
-// Number of images to display
+// Number of asteroids to display
 const NUM_ASTEROID = 100;
 
 // Array of the loaded asteroid images
 let asteroidImages = [];
 // Array of asteroid objects
 let asteroids = [];
-// Loaded worm hole image
+// Variable for the wormhole image
 let wormHoleImage;
 // Worm hole object
 let wormHole;
 
+// Player's missclick chances
 let playerLife = 3;
+
+// Hurt feedback properties when an asteroid is clicked on
 let hurtTimer = 0;
 let hurtOpacity = 0;
+
+// Fade in of the Winning screen
 let winOpacity = -30;
 
+// Initial intro state of the game
 let gameState = "INTRO";
 
 // preload()
-// Loads all the asteroid images and the worm hole image
+// Loads all the asteroid images and the wormhole image
 function preload() {
-  // Loop once for each asteroid image, starting from 0
+  // Loop once for each asteroid image
   for (let i = 0; i < NUM_ASTEROID_IMG; i++) {
-    // Load the image with the current number (starting from 0)
-    let asteroidImage = loadImage(`${ASTEROID_IMAGE_PREFIX}${i}.png`);
-    // Add the image to the array for use later when randomly selecting
+    // Load the image of the current number
+    let asteroidImage = loadImage(`${ASTEROID_IMG_PREFIX}${i}.png`);
     asteroidImages.push(asteroidImage);
   }
 
   // Load the worm hole image
-  wormHoleImage = loadImage(`${WORM_HOLE_IMAGE}`);
+  wormHoleImage = loadImage(`${WORMHOLE_IMG}`);
 }
 
 // setup()
@@ -71,11 +75,13 @@ function createAsteroids() {
 }
 
 // createRandomAsteroid()
-// Create an asteroid object at a random position with a random image
+// Create an asteroid object at a random position with a random image and a random direction
 // then return that created asteroid
 function createRandomAsteroid() {
   let x = random(0, width);
   let y = random(0, height);
+
+  // Randomise the direction of each asteroid
   let direction = Math.floor(random(0, 4));
   let rotation = random(0,10);
   let imgSize = 180;
@@ -98,6 +104,7 @@ function createWormHole() {
 function draw() {
   background(0);
 
+  // Determines at which state the game is
   if (gameState === "INTRO") {
     showIntro();
   } else if (gameState === "GAME") {
@@ -110,6 +117,8 @@ function draw() {
   }
 }
 
+
+// Properties of the intro screen
 function showIntro() {
   textAlign(CENTER, CENTER);
 
@@ -135,6 +144,8 @@ function showIntro() {
   }
 }
 
+
+// Functions running the game itself
 function showGame() {
   // Alternate the order in which the space objects are drawn
   if (!wormHole.found) {
@@ -147,9 +158,12 @@ function showGame() {
     updateWormHole();
   }
 
+  //Call the method for the player's damage
   showDmg();
 }
 
+
+// Properties of the game over screen
 function showGameOver() {
   showDmg();
 
@@ -174,6 +188,8 @@ function showGameOver() {
   }
 }
 
+
+// Properties of the winning screen
 function showGameWin() {
   textAlign(CENTER, CENTER);
 
@@ -202,6 +218,7 @@ function showGameWin() {
   }
 }
 
+
 // updateAsteroids()
 // Calls the update() method for all asteroids
 function updateAsteroids() {
@@ -214,12 +231,15 @@ function updateAsteroids() {
   // console.groupEnd();
 }
 
+
 // updateWormHole()
 // Calls the update() method of the worm hole
 function updateWormHole() {
   wormHole.update();
 }
 
+
+// Manage the feedback when the player takes damage
 function showDmg() {
   if (hurtTimer > 0) {
     if (playerLife == 0) {
@@ -241,8 +261,7 @@ function showDmg() {
 
 // mousePressed()
 // Automatically called by p5 when the mouse is pressed.
-// Call the worm hole's mousePressed() method so it knows
-// the mouse was clicked.
+// Call the wormhole's onOverlapClick() method so it knows.
 function mousePressed() {
   if (gameState === "GAME" && !wormHole.found && playerLife > 0) {
     // Did the user click on the worm hole
@@ -252,11 +271,12 @@ function mousePressed() {
       for (let i = 0; i < asteroids.length; i++) {
         asteroidClicked = asteroids[i].mousePressed();
 
-        // Prevent a click on overlapping asteroids to trigger multiple mousePressed()
+        // Prevent a click on overlapping asteroids to trigger multiple onOverlapClick()
         if (asteroidClicked) {
           break;
         }
       }
+      // Start the hurt feedback animation
       if (asteroidClicked) {
         hurtTimer = 120;
       }

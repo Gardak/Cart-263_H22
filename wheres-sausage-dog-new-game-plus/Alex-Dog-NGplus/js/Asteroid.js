@@ -1,7 +1,6 @@
-// SausageDog
-// An extension of the Animal class
-// Adds the idea of being found when clicked
-// and spinning when found
+// Asteroid
+// An extension of the spaceobject class
+// Slow moving objects meant to hide the player's objectives
 
 class Asteroid extends SpaceObject {
   // constructor(x,y,image)
@@ -16,6 +15,8 @@ class Asteroid extends SpaceObject {
     this.direction = direction;
     this.speed = 0.5;
 
+    // Switch
+    // Change the direction of the asteroids at random
     switch (this.direction) {
       case 0:
         this.vx = this.speed;
@@ -47,6 +48,7 @@ class Asteroid extends SpaceObject {
     // console.log('Asteroid update()');
   }
 
+  // Make the asteroids move around each frames
   bounceAround() {
     this.x += this.vx;
     this.y += this.vy;
@@ -54,7 +56,7 @@ class Asteroid extends SpaceObject {
     this.handleWrapping();
   }
 
-  // Wrap around the screen
+  // Make the asteroids wrap around the screen
   handleWrapping() {
     if (this.x < 0) {
       this.x += width;
@@ -69,6 +71,7 @@ class Asteroid extends SpaceObject {
     }
   }
 
+  //Function when the player clicks on the asteroids
   onOverlapClick() {
     // remove hp
     playerLife -= this.dmg;
