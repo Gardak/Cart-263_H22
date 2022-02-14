@@ -27,5 +27,10 @@ display() {
   pop();
 }
 
-interactPlayer() {
+interactPlayer(player) {
+  let d = dist(this.x, this.y, player.x, player.y);
+
+  if (d < this.imgSize/2){
+    playerInteraction();
+  }
 }
