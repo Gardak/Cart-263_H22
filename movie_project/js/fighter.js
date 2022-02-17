@@ -1,10 +1,11 @@
 class Fighter {
 
-constructor (width, height, img, punchImg) {
+constructor (width, height, img, punchImg, blockImg) {
     this.witdh = width;
     this.height = height;
     this.img = img;
     this.punchImg = punchImg;
+    this.blockImg = blockImg;
     this.idleImg = img;
     this.imgSizeX = 100;
     this.imgSizeY = 200;
@@ -17,6 +18,10 @@ constructor (width, height, img, punchImg) {
 
     this.dmg = 10;
     this.canTakeDmg = true;
+
+    this.isBlocking = false;
+    this.isPunching = false;
+    //this.isDodging = false;
 }
 
 update() {
@@ -30,6 +35,15 @@ display() {
 
   imageMode(CENTER);
   translate(this.x, this.y);
+
+  if (this.chargeAtk){
+    if (this.atkTimer % 4 > 2){
+    tint(0, 153, 204);
+  } else {
+    noTint();
+  }
+  }
+
   image(this.img, 0, 0, this.imgSizeX, this.imgSizeY);
 
   pop();

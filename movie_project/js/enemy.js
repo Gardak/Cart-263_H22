@@ -11,6 +11,7 @@ class Enemy extends Fighter {
     this.atkTimer = 0;
     this.atkType = 0;
 
+    this.chargeAtk = false;
     this.gotHit = false;
   }
 
@@ -32,9 +33,14 @@ class Enemy extends Fighter {
         if (this.atkTimer === 90){
         console.log('Enemy about to punch');
       }
-        if (this.atkTimer == 30) {
+        if (this.atkTimer > 30){
+          this.chargeAtk = true;
+        } else if (this.atkTimer == 30) {
           console.log('falcon punch')
+          if (playerFighter.canTakeDmg){
           playerFighter.life -= this.dmg;
+        }
+          this.chargeAtk = false;
         }
         if (this.atkTimer <= 30 && this.atkTimer >= 1) {
           this.img = this.punchImg;
@@ -44,6 +50,8 @@ class Enemy extends Fighter {
           this.atkTimer = 0;
           console.log('ouch');
           this.gotHit = false;
+          this.chargeAtk = false;
+
         }
 
       break;
@@ -56,6 +64,7 @@ class Enemy extends Fighter {
       this.img = this.idleImg;
       this.atkTimer = this.atkSpeed;
       this.atkType = Math.floor(random(2));
+
     }
 
   }

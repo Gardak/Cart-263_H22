@@ -1,7 +1,7 @@
 
 class Player extends Fighter {
-  constructor ( width, height, img, punchImg){
-    super( width, height, img, punchImg);
+  constructor ( width, height, img, punchImg, blockImg){
+    super( width, height, img, punchImg, blockImg);
     this.x = (width / 3);
     this.y = ((height*7) / 12);
     this.lifeBarX = (width / 9);
@@ -9,6 +9,8 @@ class Player extends Fighter {
 
     this.atkSpeed = 60;
     this.atkTimer = 0;
+
+    this.chargeAtk = false;
 
     this.atkBarX = ((width*1) / 4);
     this.atkBarY = ((height*3) / 4);
@@ -20,29 +22,47 @@ class Player extends Fighter {
   combatMoves(){
     if (keyIsDown(32) && this.atkTimer <= 0){
       this.playerPunch();
-      this.atkTimer = this.atkSpeed;
-    }
-    if (this.atkTimer > 0){
-      this.atkTimer -= 1;
+    } else if (keyIsDown(82) && this.atkTimer <= 0){
+      this.playerBlock();
+    } else {
+      //in case
     }
 
+    if (this.atkTimer > 0){
+      this.atkTimer -= 1;
+    } else if(this.atkTimer <= 0){
+      this.isBlocking = false;
+      this.isPunching = false;
+    }
     this.playerAnimation();
   }
 
   playerPunch(){
+    this.isPunching = true;
     if (enemyFighter.canTakeDmg){
       enemyFighter.life -= this.dmg;
       enemyFighter.gotHit = true;
       //console.log('player punched');
       //console.log(enemyFighter.life);
     }
+    this.atkTimer = this.atkSpeed;
   }
 
+    playerBlock() {
+      this.canTakeDmg = false;
+      console.log('player block')
+      this.atkTimer = this.atkSpeed;
+      this.isBlocking = true;
+    }
+
   playerAnimation(){
-    if (this.atkTimer > 40){
+    if (this.isPunching && this.atkTimer > this.atkSpeed/2){
       this.img = this.punchImg;
+    } else if (this.isBlocking) {
+      this.img = this.blockImg;
     } else {
       this.img = this.idleImg;
+      this.canTakeDmg = true;
     }
 
     push();
