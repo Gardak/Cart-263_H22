@@ -28,11 +28,17 @@ class Player extends Fighter {
       //in case
     }
 
+    if (this.gotHit) {
+      this.atkTimer = 0;
+      this.gotHit = false;
+    }
+
     if (this.atkTimer > 0){
       this.atkTimer -= 1;
     } else if(this.atkTimer <= 0){
       this.isBlocking = false;
       this.isPunching = false;
+      this.isIdle = true;
     }
     this.playerAnimation();
   }
