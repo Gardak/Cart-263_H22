@@ -59,15 +59,22 @@ class Fighter {
 
   lifeBar() {
     push();
-    strokeWeight(10);
-    stroke(200, 230, 15);
+    strokeWeight(8);
+    stroke(70,70,70);
     noFill();
     rect(this.lifeBarX, this.lifeBarY, width / 3, height / 20);
     pop();
 
     push();
     noStroke();
+
+    if (this.life > 60) {
     fill(20, 220, 10);
+  } else if (this.life <= 60 && this.life > 20){
+    fill(220, 195, 20);
+  } else {
+    fill(200, 0, 0);
+  }
     this.lifeLenght = map(this.life, 0, this.maxLife, 0, this.lifeLenghtMax);
     rect(this.lifeBarX, this.lifeBarY, this.lifeLenght, height / 20);
     //console.log(this.lifeLenght);

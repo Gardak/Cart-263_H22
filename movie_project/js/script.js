@@ -74,6 +74,8 @@ function draw() {
 push();
   background(100);
 pop();
+
+
   playerFighter.update();
   enemyFighter.update();
 
