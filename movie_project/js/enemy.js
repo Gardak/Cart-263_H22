@@ -1,13 +1,13 @@
 class Enemy extends Fighter {
-  constructor(width, height, img, life) {
-    super(width, height, img, life);
+  constructor( width, height, img, punchImg, blockImg) {
+    super( width, height, img, punchImg, blockImg);
     this.x = (width * 2) / 3;
     this.y = (height * 7) / 12;
     this.lifeBarX = (width * 5) / 9;
     this.lifeBarY = height / 10;
 
-    this.atkSpeed = 90;
-    this.atkTimer = 90;
+    this.atkSpeed = 120;
+    this.atkTimer = 120;
     this.atkType = 0;
 
     this.chargeAtk = false;
@@ -31,6 +31,7 @@ class Enemy extends Fighter {
           //Block
         case 1:
           this.canTakeDmg = false;
+          this.img = this.blockImg;
           if (this.atkTimer === 90) {
             console.log("Enemy is blocking");
           }
@@ -56,7 +57,7 @@ class Enemy extends Fighter {
           }
 
           if (this.gotHit) {
-            this.atkTimer = 0;
+            //this.atkTimer = 0;
             console.log("ouch");
             this.gotHit = false;
             this.chargeAtk = false;

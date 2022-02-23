@@ -6,7 +6,7 @@ class Fighter {
     this.punchImg = punchImg;
     this.blockImg = blockImg;
     this.idleImg = img;
-    this.imgSizeX = 100;
+    this.imgSizeX = 200;
     this.imgSizeY = 200;
 
     this.xp = 0;

@@ -23,11 +23,11 @@ Description of preload
 */
 function preload() {
 
- enemyImg = loadImage('assets/images/enemy.png');
+ enemyImg = loadImage('assets/images/enemy_idle.png');
  enemyPunchImg = loadImage('assets/images/enemy_punch.png');
  enemyBlockImg = loadImage('assets/images/enemy_block.png');
 
- playerImg = loadImage('assets/images/player.png');
+ playerImg = loadImage('assets/images/player_idle.png');
  playerPunchImg = loadImage('assets/images/player_punch.png');
  playerBlockImg = loadImage('assets/images/player_block.png');
 
@@ -44,6 +44,16 @@ function setup() {
   createCanvas(1000,800);
 
   createPlayer();
+  annyang.start();
+
+  setTimeout(function(){
+    annyang.trigger('punch')
+  }, 2000);
+
+  setTimeout(function(){
+    annyang.trigger('block')
+  }, 4000);
+
   createEnemy();
 }
 
@@ -53,8 +63,8 @@ function createPlayer() {
   let y = height;
 
   playerFighter = new Player( x, y, playerImg, playerPunchImg, playerBlockImg);
+  playerFighter.me = playerFighter;
   console.log('player Spawned');
-
 }
 
 function createEnemy() {
@@ -74,7 +84,6 @@ function draw() {
 push();
   background(100);
 pop();
-
 
   playerFighter.update();
   enemyFighter.update();
