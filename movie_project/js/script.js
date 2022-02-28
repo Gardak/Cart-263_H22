@@ -1,9 +1,9 @@
 /**
-Title of Project
-Author Name
+Real Steel: Street fight
+Student: Alex Lorrain
+Teacher: Pippin Barr
 
-This is a template. You must fill in the title,
-author, and this description to match your project!
+Voice activated versus fighter game against an AI
 */
 
 "use strict";
