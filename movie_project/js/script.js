@@ -8,6 +8,7 @@ author, and this description to match your project!
 
 "use strict";
 
+//enemy utilities
 let enemyImg;
 let enemyFighter;
 let enemyPunchImg;
@@ -15,6 +16,7 @@ let enemyBlockImg;
 let enemyHurtImg;
 let enemyDeadImg;
 
+//player utilities
 let playerImg;
 let playerFighter;
 let playerPunchImg;
@@ -22,19 +24,24 @@ let playerBlockImg;
 let playerHurtImg;
 let playerDeadImg;
 
+//background utilities
+let street;
+
+//sound utilities
 let soundTrack;
 let readyFight;
 let youWinSound;
 let youLoseSound;
 let endSound = false;
+let impactSounds = [];
 
+//timer for the end of the match
 let overTimer = 30;
 
+//intiate the game with it's intro
 let gameState = "INTRO";
 
-/**
-Description of preload
-*/
+//load in images and sound used in the game
 function preload() {
   enemyImg = loadImage("assets/images/enemy_idle.png");
   enemyPunchImg = loadImage("assets/images/enemy_punch.png");
@@ -48,15 +55,15 @@ function preload() {
   playerHurtImg = loadImage("assets/images/player_hurt.png");
   playerDeadImg = loadImage("assets/images/player_dead.png");
 
+  street = loadImage("assets/images/street.png");
+
   soundTrack = loadSound("assets/sounds/fight/Guile_Theme.mp3");
   readyFight = loadSound("assets/sounds/fight/Ready_Fight.mp3");
   youWinSound = loadSound("assets/sounds/fight/You_Win.mp3");
   youLoseSound = loadSound("assets/sounds/fight/You_Lose.mp3");
 }
 
-/**
-Description of setup
-*/
+//setup both fighters and create the games canvas
 function setup() {
   frameRate(30);
 
@@ -65,31 +72,41 @@ function setup() {
   createPlayer();
   annyang.start();
 
-  // setTimeout(function(){
-  //   annyang.trigger('punch')
-  // }, 2000);
-  //
-  // setTimeout(function(){
-  //   annyang.trigger('block')
-  // }, 4000);
-
   createEnemy();
 }
 
+//create the player persona
 function createPlayer() {
   let x = width;
   let y = height;
 
-  playerFighter = new Player(x, y, playerImg, playerPunchImg, playerBlockImg, playerHurtImg, playerDeadImg);
+  playerFighter = new Player(
+    x,
+    y,
+    playerImg,
+    playerPunchImg,
+    playerBlockImg,
+    playerHurtImg,
+    playerDeadImg
+  );
   playerFighter.me = playerFighter;
   console.log("player Spawned");
 }
 
+//create the enemy AI
 function createEnemy() {
   let x = width;
   let y = height;
 
-  enemyFighter = new Enemy(x, y, enemyImg, enemyPunchImg, enemyBlockImg, enemyHurtImg, enemyDeadImg);
+  enemyFighter = new Enemy(
+    x,
+    y,
+    enemyImg,
+    enemyPunchImg,
+    enemyBlockImg,
+    enemyHurtImg,
+    enemyDeadImg
+  );
   console.log("enemy Spawned");
 }
 
@@ -121,16 +138,17 @@ function showIntro() {
   introText = introText + "--Press space to start--";
 
   push();
-  textSize(100);
+  textSize(70);
   strokeWeight(10);
   stroke(0, 30, 150);
-  fill(180);
+  fill(120);
   text(introTitle, width / 2, height / 3);
   textSize(36);
   strokeWeight(3);
   text(introText, width / 2, height / 2);
   pop();
 
+  //Have the sound effect only once and start the game and soundtrack
   if (keyIsDown(32)) {
     gameState = "GAME";
     readyFight.play();
@@ -143,30 +161,31 @@ function showIntro() {
 //Manage and update both fighters and the interface during the game
 function showGame() {
   push();
-  background(100);
+  background(street);
   pop();
 
   playerFighter.update();
   enemyFighter.update();
 
+  //manage whenever one of the fighter has 0-hp
   if (enemyFighter.life <= 0) {
     if (overTimer <= 0) {
       gameState = "GAMEWIN";
       soundTrack.stop();
-      if (!endSound){
-      youWinSound.play();
-      endSound = true;
-    }
+      if (!endSound) {
+        youWinSound.play();
+        endSound = true;
+      }
     }
     overTimer--;
   } else if (playerFighter.life <= 0) {
     if (overTimer <= 0) {
       gameState = "GAMEOVER";
       soundTrack.stop();
-      if (!endSound){
-      youLoseSound.play();
-      endSound = true;
-    }
+      if (!endSound) {
+        youLoseSound.play();
+        endSound = true;
+      }
     }
     overTimer--;
   }
@@ -174,7 +193,6 @@ function showGame() {
 
 // Properties of the game over screen
 function showGameOver() {
-
   let overTitle = "You got trashed\n";
 
   let overText = "Time to prove your worth\n";
@@ -206,7 +224,7 @@ function showGameWin() {
   winText = winText + "--Press 'r' for the next fight--";
 
   push();
-  textSize(100);
+  textSize(80);
   strokeWeight(10);
   stroke(0, 30, 150);
   fill(180, 180, 180);
