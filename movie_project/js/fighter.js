@@ -1,10 +1,11 @@
 class Fighter {
-  constructor(width, height, img, punchImg, blockImg) {
+  constructor(width, height, img, punchImg, blockImg, hurtImg) {
     this.witdh = width;
     this.height = height;
     this.img = img;
     this.punchImg = punchImg;
     this.blockImg = blockImg;
+    this.hurtImg = hurtImg;
     this.idleImg = img;
     this.imgSizeX = 200;
     this.imgSizeY = 200;
@@ -17,7 +18,7 @@ class Fighter {
     this.idleAnimTimer = 0;
 
     this.maxLife = 100;
-    this.life = 100;
+    this.life = 10;
     this.lifeLenghtMax = width / 3;
     this.lifeLenght = width / 3;
 
@@ -35,7 +36,9 @@ class Fighter {
   update() {
     this.display();
     this.lifeBar();
-    this.combatMoves();
+    if (gameState === 'GAME'){
+      this.combatMoves();
+    }
   }
 
   display() {
@@ -52,6 +55,11 @@ class Fighter {
       }
     }
 
+    if (this.gotHit) {
+      this.img = this.hurtImg;
+      console.log('hurt animation');
+    }
+    
     image(this.img, this.xp, this.yp, this.imgSizeX, this.imgSizeY);
 
     pop();

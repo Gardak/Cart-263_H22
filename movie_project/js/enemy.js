@@ -1,6 +1,6 @@
 class Enemy extends Fighter {
-  constructor( width, height, img, punchImg, blockImg) {
-    super( width, height, img, punchImg, blockImg);
+  constructor( width, height, img, punchImg, blockImg, hurtImg) {
+    super( width, height, img, punchImg, blockImg, hurtImg);
     this.x = (width * 2) / 3;
     this.y = (height * 7) / 12;
     this.lifeBarX = (width * 5) / 9;
@@ -56,8 +56,8 @@ class Enemy extends Fighter {
             this.img = this.punchImg;
           }
 
+          //animation and triggers when the enemy gets hit
           if (this.gotHit) {
-            //this.atkTimer = 0;
             console.log("ouch");
             this.gotHit = false;
             this.chargeAtk = false;

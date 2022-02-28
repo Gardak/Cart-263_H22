@@ -1,6 +1,6 @@
 class Player extends Fighter {
-  constructor(width, height, img, punchImg, blockImg) {
-    super(width, height, img, punchImg, blockImg);
+  constructor(width, height, img, punchImg, blockImg, hurtImg) {
+    super(width, height, img, punchImg, blockImg, hurtImg);
     this.x = width / 3;
     this.y = (height * 7) / 12;
     this.lifeBarX = width / 9;
@@ -74,13 +74,13 @@ class Player extends Fighter {
   }
 
   combatMoves() {
-    if (keyIsDown(32) && this.atkTimer <= 0) {
-      this.playerPunch();
-    } else if (keyIsDown(82) && this.atkTimer <= 0) {
-      this.playerBlock();
-    } else {
-      //in case
-    }
+    // if (keyIsDown(32) && this.atkTimer <= 0) {
+    //   this.playerPunch();
+    // } else if (keyIsDown(82) && this.atkTimer <= 0) {
+    //   this.playerBlock();
+    // } else {
+    //   //in case
+    // }
 
     if (this.gotHit) {
       this.atkTimer = 0;
