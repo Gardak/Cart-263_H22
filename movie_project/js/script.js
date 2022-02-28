@@ -13,12 +13,20 @@ let enemyFighter;
 let enemyPunchImg;
 let enemyBlockImg;
 let enemyHurtImg;
+let enemyDeadImg;
 
 let playerImg;
 let playerFighter;
 let playerPunchImg;
 let playerBlockImg;
 let playerHurtImg;
+let playerDeadImg;
+
+let soundTrack;
+let readyFight;
+let youWinSound;
+let youLoseSound;
+let endSound = false;
 
 let overTimer = 30;
 
@@ -32,11 +40,18 @@ function preload() {
   enemyPunchImg = loadImage("assets/images/enemy_punch.png");
   enemyBlockImg = loadImage("assets/images/enemy_block.png");
   enemyHurtImg = loadImage("assets/images/enemy_hurt.png");
+  enemyDeadImg = loadImage("assets/images/enemy_dead.png");
 
   playerImg = loadImage("assets/images/player_idle.png");
   playerPunchImg = loadImage("assets/images/player_punch.png");
   playerBlockImg = loadImage("assets/images/player_block.png");
   playerHurtImg = loadImage("assets/images/player_hurt.png");
+  playerDeadImg = loadImage("assets/images/player_dead.png");
+
+  soundTrack = loadSound("assets/sounds/fight/Guile_Theme.mp3");
+  readyFight = loadSound("assets/sounds/fight/Ready_Fight.mp3");
+  youWinSound = loadSound("assets/sounds/fight/You_Win.mp3");
+  youLoseSound = loadSound("assets/sounds/fight/You_Lose.mp3");
 }
 
 /**
@@ -65,7 +80,7 @@ function createPlayer() {
   let x = width;
   let y = height;
 
-  playerFighter = new Player(x, y, playerImg, playerPunchImg, playerBlockImg, playerHurtImg);
+  playerFighter = new Player(x, y, playerImg, playerPunchImg, playerBlockImg, playerHurtImg, playerDeadImg);
   playerFighter.me = playerFighter;
   console.log("player Spawned");
 }
@@ -74,7 +89,7 @@ function createEnemy() {
   let x = width;
   let y = height;
 
-  enemyFighter = new Enemy(x, y, enemyImg, enemyPunchImg, enemyBlockImg, enemyHurtImg);
+  enemyFighter = new Enemy(x, y, enemyImg, enemyPunchImg, enemyBlockImg, enemyHurtImg, enemyDeadImg);
   console.log("enemy Spawned");
 }
 
@@ -118,10 +133,14 @@ function showIntro() {
 
   if (keyIsDown(32)) {
     gameState = "GAME";
+    readyFight.play();
+
+    soundTrack.setVolume(0.2);
+    soundTrack.loop();
   }
 }
 
-//Manage and update both fighters during the game
+//Manage and update both fighters and the interface during the game
 function showGame() {
   push();
   background(100);
@@ -130,14 +149,24 @@ function showGame() {
   playerFighter.update();
   enemyFighter.update();
 
-  if (playerFighter.life <= 0) {
-    if (overTimer <= 0) {
-      gameState = "GAMEOVER";
-    }
-    overTimer--;
-  } else if (enemyFighter.life <= 0) {
+  if (enemyFighter.life <= 0) {
     if (overTimer <= 0) {
       gameState = "GAMEWIN";
+      soundTrack.stop();
+      if (!endSound){
+      youWinSound.play();
+      endSound = true;
+    }
+    }
+    overTimer--;
+  } else if (playerFighter.life <= 0) {
+    if (overTimer <= 0) {
+      gameState = "GAMEOVER";
+      soundTrack.stop();
+      if (!endSound){
+      youLoseSound.play();
+      endSound = true;
+    }
     }
     overTimer--;
   }

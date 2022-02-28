@@ -1,6 +1,6 @@
 class Player extends Fighter {
-  constructor(width, height, img, punchImg, blockImg, hurtImg) {
-    super(width, height, img, punchImg, blockImg, hurtImg);
+  constructor(width, height, img, punchImg, blockImg, hurtImg, deadImg) {
+    super(width, height, img, punchImg, blockImg, hurtImg, deadImg);
     this.x = width / 3;
     this.y = (height * 7) / 12;
     this.lifeBarX = width / 9;
