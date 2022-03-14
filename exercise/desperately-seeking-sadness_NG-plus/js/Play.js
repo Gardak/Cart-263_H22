@@ -15,21 +15,29 @@ class Play extends Phaser.Scene {
     //Position the goal object at a random position in the canvas
     Phaser.Actions.RandomRectangle([this.goal], this.physics.world.bounds);
 
+    //Create an enemy slowly chasing after the player
+    this.enemy = this.physics.add.sprite(0, 300, 'flowey');
+
+    this.laugh = this.sound.add('laugh');
+
     //Create a group of obstacles hidding the goal from the player
     this.obstacles = this.physics.add.group({
       key: 'bush',
-      quantity: 120,
-      collideWorldBounds: true,
-      bounceX: 0.8,
-      bounceY: 0.8,
-      dragX: 20,
-      dragY: 20
+      quantity: 100,
+      //collideWorldBounds: true,
+      bounceX: 0.2,
+      bounceY: 0.2,
+      dragX: 10,
+      dragY: 10
     });
     //Position the obstacles at random positions throughout the canvas
     Phaser.Actions.RandomRectangle(this.obstacles.getChildren(), this.physics.world.bounds);
 
     //Add interactivity when both the avatar and the goal overlap
     this.physics.add.overlap(this.avatar, this.goal, this.getGoal, null, this);
+    //Add an effect when the enemy reaches the avatar
+    this.physics.add.overlap(this.avatar, this.enemy, this.getWreck, null, this);
+
 
     //Add collisions between the avatar and the bushes
     this.physics.add.collider(this.avatar, this.obstacles);
@@ -39,15 +47,33 @@ class Play extends Phaser.Scene {
      this.cursors = this.input.keyboard.createCursorKeys();
   }
 
+
+
   //Called when the avatar and the goal overlap
   getGoal(avatar, goal){
     //Reset the goal at a random position within the game's borders
     Phaser.Actions.RandomRectangle([goal], this.physics.world.bounds);
   }
 
+
+
+  getWreck(avatar, enemy){
+    this.laugh.play();
+    Phaser.Actions.RandomRectangle([enemy],this.physics.world.bounds);
+  }
+
+
+
   //Funtions needed durint gameplay
   update() {
     this.handleInput();
+
+    //make the obstacles wrap around the screen
+    this.physics.world.wrap(this.obstacles,32);
+        this.physics.world.wrap(this.enemy,32);
+    //Have the enemy chase the avatar
+    this.physics.moveToObject(this.enemy, this.avatar, 80);
+
   }
 
   //Setup the inputs to control the avatar
@@ -71,5 +97,7 @@ class Play extends Phaser.Scene {
     else {
       this.avatar.setAcceleration(0);
     }
+
+    //this.physics.world.wrap(this.avatar,32);
   }
 }
