@@ -8,47 +8,51 @@
 
     <!-- CSS stylesheet(s) -->
     <link rel="stylesheet" type="text/css" href="css/style.css" />
-    <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+    <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/ui-darkness/jquery-ui.css" />
 
     <!-- Library script(s) go here -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
   </head>
 
+  <style>
+  body {
+    background-image: url('assets/images/ritual.png');
+  }
+  </style>
+
   <body>
 
-    <!-- The poem with the secret message in it. Secret letters are in spans. -->
+    <!-- The area to drag the letters to form an answer -->
+    <section id="hp"></section>
+    <section id="love"></section>
+    <section id="craft"></section>
+
+    <!-- The secret message. Secret letters are in spans. -->
     <section id="message">
-      <h2><span class="secret">T</span>his Is Just To Say</h2>
+      <h2>T<span class="secret" display="inline">h</span>e rats in the walls</h2>
       <p>
-        I <span class="secret">h</span>ave eaten<br />
-        the plums<br />
-        that wer<span class="secret">e</span> in<br />
-        the icebox
+        I retired early, being very slee<span class="secret">p</span>y,<br> </br>
+        but was harassed by dreams of the most horrible sort.<br> </br>
       </p>
       <p>
-        and which<br />
-        you we<span class="secret">r</span>e probably<br />
-        saving<br />
-        for br<span class="secret">e</span>akfast
+      I seemed to be <span class="secret">l</span>ooking down from an immense height upon a twilit gr<span class="secret">o</span>tto,<br> </br>
+      knee-deep with filth, where a white-bearded daemon swineherd dro<span class="secret">v</span>e about with his staff a flock of fungous,<br> </br>
+      flabby b<span class="secret">e</span>asts whose appearan<span class="secret">c</span>e filled me with unutterable loathing.<br> </br>
       </p>
       <p>
-        Forgive <span class="secret">m</span>e<br />
-        they were del<span class="secret">i</span>cious<br />
-        so sweet<br />
-        a<span class="secret">n</span>d so cold
+        Then, as the swinehe<span class="secret">r</span>d paused and nodded over his t<span class="secret">a</span>sk,<br> </br>
+        a mighty swarm of rats rained down on the stinking abyss and <span class="secret">f</span>ell to devouring beasts and man alike.
       </p>
-      <h4>William Carlos Williams</h4>
+      <h4>...Only the mind I origina<span class="secret">t</span>ed from may summon me...</h4>
     </section>
 
-    <!-- The area to drag the letters to to form an answer -->
-    <section id="answer"></section>
-
     <!-- The dialog to pop up when they get it right -->
-    <div id="solved-dialog" title="DA VINCI?!">
-      <p>
-        You are soooooo smart!
-      </p>
+    <div id="solved-dialog" title="ph'nglui mglw'nafh Cthulhu R'lyeh wgah'nagl fhtagn">
+      <span id="chtulhu">
+        I am now FREE!!
+      </span>
+      <img src='assets/gif/cthulhu_cute.gif' alt='cthulhu'>
     </div>
 
     <!-- My script(s) -->

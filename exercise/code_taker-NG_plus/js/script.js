@@ -1,53 +1,90 @@
 /**
-Code Taker++
+Code Taker NG+
 Student: Alex Lorrain
 Teacher: Pippin Barr
 */
 
 "use strict";
 
-// The secret answer we're looking for (including capitalization)
-let secret = `Theremin`;
+let cthulhuGif;
 
-// Turn the dialog div into an actual dialog
+function preload() {
+  cthulhuGif = createImg("assets/gif/cthulhu_cute.gif");
+}
+
+let secret_hp = `hp`;
+let secret_love = `love`;
+let secret_craft = `craft`;
+
 $(`#solved-dialog`).dialog({
-  // Don't open it right away
   autoOpen: false,
-  // Add a condescending button to close it
+
+  minWidth: 675,
+  minHeight: 630,
+
   buttons: {
-    "I know": function() {
+    "Oh Sh...": function () {
+      $(this).effect("explode", 500);
       $(this).dialog(`close`);
-    }
-  }
+    },
+  },
 });
 
-// When the user mouses over secret letters, highlight them
-$(`.secret`).on(`mouseover`, function(event) {
-  $(this).addClass(`found`, 500);
+$(`.secret`).on(`mouseover`, function (event) {
+  $(this).addClass(`found`, 300);
 });
 
-// Let the user drag secret letters via a clone helper
 $(`.secret`).draggable({
-  helper: `clone`
+  helper: `clone`,
 });
 
-// When the user drops a letter on the answer...
-$(`#answer`).droppable({
-  drop: function(event, ui) {
-    // Get the letter in the dragged element
+$(`#hp`).droppable({
+  drop: function (event, ui) {
     let letter = ui.draggable.text();
-    // Add it to the answer box
     $(this).append(letter);
-    // Disable dragging for this letter
     ui.draggable.draggable(`disable`);
-    // Remove the highlighting of this letter
-    ui.draggable.removeClass(`found`, 500);
-    // Disable mouseovers on this letter
+    ui.draggable.removeClass(`found`, 300);
     ui.draggable.off(`mouseover`);
-    // Check if they got the answer right yet...
-    if ($(`#answer`).text() === secret) {
-      // If they did, display the dialog!
+    if (
+      $(`#hp`).text() === secret_hp &&
+      $(`#love`).text() === secret_love &&
+      $(`#craft`).text() === secret_craft
+    ) {
       $(`#solved-dialog`).dialog(`open`);
     }
-  }
+  },
+});
+
+$(`#love`).droppable({
+  drop: function (event, ui) {
+    let letter = ui.draggable.text();
+    $(this).append(letter);
+    ui.draggable.draggable(`disable`);
+    ui.draggable.removeClass(`found`, 300);
+    ui.draggable.off(`mouseover`);
+    if (
+      $(`#hp`).text() === secret_hp &&
+      $(`#love`).text() === secret_love &&
+      $(`#craft`).text() === secret_craft
+    ) {
+      $(`#solved-dialog`).dialog(`open`);
+    }
+  },
+});
+
+$(`#craft`).droppable({
+  drop: function (event, ui) {
+    let letter = ui.draggable.text();
+    $(this).append(letter);
+    ui.draggable.draggable(`disable`);
+    ui.draggable.removeClass(`found`, 300);
+    ui.draggable.off(`mouseover`);
+  if (
+      $(`#hp`).text() === secret_hp &&
+      $(`#love`).text() === secret_love &&
+      $(`#craft`).text() === secret_craft
+    ) {
+      $(`#solved-dialog`).dialog(`open`);
+    }
+  },
 });
