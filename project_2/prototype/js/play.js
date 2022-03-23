@@ -16,12 +16,10 @@ class Play extends Phaser.Scene {
     this.grounds.create( 500, 810, 'groundFloor');
 
     //Create platforms
-    this.platformDrag = this.add.sprite( 500, 400, 'platformDrag').setInteractive();
-    this.input.setDraggable(this.platformDrag);
+    this.platformDrag = this.physics.add.sprite( 500, 400, 'platformDrag');
+    this.platformDrag.inputEnable = true;
+    this.platformDrag.input.enableDrag();
     this.input.on('drag', this.onDrag);
-
-    this.platformPhys = this.physics.add.staticGroup();
-    this.platformPhys.create(this.platformDrag.x, this.platformDrag.y);
 
     //Add collision for the avatar and the platforms
     this.physics.add.collider(this.avatar, this.grounds);
@@ -77,8 +75,6 @@ class Play extends Phaser.Scene {
   onDrag(pointer, object, dragX, dragY) {
     object.x = dragX;
     object.y = dragY;
-    this.platformPhys.x = dragX;
-    this.platformPhys.y = dragY;
   }
 
 }
