@@ -16,13 +16,24 @@ class Play extends Phaser.Scene {
     this.grounds.create( 500, 810, 'groundFloor');
 
     //Create platforms
-    this.platformDrag = this.physics.add.sprite( 500, 400, 'platformDrag');
-    this.platformDrag.inputEnable = true;
-    this.platformDrag.input.enableDrag();
+    this.platformDrag = this.physics.add.image( 500, 400, 'platformDrag')
+                          .setInteractive()
+                          .setCollideWorldBounds(true);
+    this.platformDrag.body.allowGravity = false;
+    this.platformDrag.body.immovable = true;
+
+    //this.platformDrag =this.physics.add.staticGroup();
+    this.input.setDraggable(this.platformDrag);
+
+    //this.game.physics.enable(this.platformDrag);
+    // this.platformDrag.inputEnable = true;
+    // this.platformDrag.input.enableDrag();
     this.input.on('drag', this.onDrag);
+    console.log(this.platformDrag);
 
     //Add collision for the avatar and the platforms
     this.physics.add.collider(this.avatar, this.grounds);
+    this.physics.add.collider(this.grounds, this.platformDrag);
     this.physics.add.collider(this.avatar, this.platformDrag);
 
     //create inputs to move the avatar around
