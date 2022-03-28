@@ -45,14 +45,17 @@ class Play extends Phaser.Scene {
 
     //create inputs to move the avatar around
      this.cursors = this.input.keyboard.createCursorKeys();
+
+     this.score = 0;
+     this.scoreText = this.add.text(20, 20, 'Gems: 0', { fontSize: '32px', fill: '#0bde00' });
   }
-
-
 
   //Called when the avatar and the goal overlap
   getGoal(avatar, goal){
     //Reset the goal at a random position within the game's borders
     Phaser.Actions.RandomRectangle([goal], this.physics.world.bounds);
+
+    this.score += 1;
   }
 
 
@@ -60,6 +63,7 @@ class Play extends Phaser.Scene {
   getWreck(avatar, enemy){
     this.laugh.play();
     Phaser.Actions.RandomRectangle([enemy],this.physics.world.bounds);
+    this.score = 0;
   }
 
 
@@ -74,6 +78,7 @@ class Play extends Phaser.Scene {
     //Have the enemy chase the avatar
     this.physics.moveToObject(this.enemy, this.avatar, 80);
 
+    this.scoreText.setText('Gems ' + this.score);
   }
 
   //Setup the inputs to control the avatar
