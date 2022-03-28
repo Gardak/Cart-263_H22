@@ -8,16 +8,36 @@ class Play extends Phaser.Scene {
   create() {
     //create the player's avatar
     this.avatar = this.physics.add.sprite(10, 720, 'avatar');
-    this.avatar.setBounce(0.1);
     this.avatar.setCollideWorldBounds(true);
 
     //Create floor
     this.grounds = this.physics.add.staticGroup();
     this.grounds.create( 500, 810, 'groundFloor');
 
+    //Create an object which is still impacted by gravity the player will have to move
+    this.weight = this.physics.add.sprite( 800, 100, 'weight')
+                          .setInteractive()
+                          .setGravity(0, 1000)
+                          .setCollideWorldBounds(true);
+
+    this.input.setDraggable(this.weight);
+
+    //Create a slow floating platform
+    this.cloud = this.physics.add.sprite( 100, 700, 'cloud')
+                          .setInteractive()
+                          .setGravity(0, -850)
+                          .setDamping(true)
+                          .setDrag(0.005)
+                          .setCollideWorldBounds(true);
+
+                        console.log(this.cloud);
+
+    this.input.setDraggable(this.cloud);
+
+
     //Create platforms
     let platformY = 100;
-    for (let i = 1; i < 3; i++) {
+    for (let i = 0; i < 3; i++) {
       this.platformDrag = this.physics.add.image( 500, platformY, 'platformDrag')
                             .setInteractive()
                             .setCollideWorldBounds(true);
@@ -29,13 +49,24 @@ class Play extends Phaser.Scene {
       platformY = platformY + 100;
       this.physics.add.collider(this.grounds, this.platformDrag);
       this.physics.add.collider(this.avatar, this.platformDrag);
+      this.physics.add.collider(this.weight, this.platformDrag);
     };
 
+
+
+
+
+    //Functions when the player drags the objects around
     this.input.on('drag', this.onDrag);
     this.input.on('dragend', this.onDragEnd);
 
-    //Add collision for the avatar and the platforms
+    //Add collision between objects
     this.physics.add.collider(this.avatar, this.grounds);
+    this.physics.add.collider(this.avatar, this.weight);
+    this.physics.add.collider(this.avatar, this.cloud);
+    this.physics.add.collider(this.weight, this.cloud);
+    this.physics.add.collider(this.cloud, this.grounds);
+    this.physics.add.collider(this.weight, this.grounds);
 
 
     //create inputs to move the avatar around
@@ -46,6 +77,7 @@ class Play extends Phaser.Scene {
   //Funtions needed during gameplay
   update() {
     this.handleInput();
+    //this.handlePhysics();
   }
 
   //Setup the inputs to control the avatar
@@ -62,19 +94,11 @@ class Play extends Phaser.Scene {
     if (this.cursors.space.isDown && this.avatar.body.touching.down)
     {
         this.avatar.setVelocityY(-300);
+        console.log(this.platformDrag);
     }
-    //Create a function to trigger with the mouse click
-    //this.input.on('pointer', this.spellOnClick, this);
-    //console.log(this);
-
   }
 
-  //Funtion called when mouse is clicked
-  //Will serve as the spell/action used with the webcam
-  // spellOnClick(pointer) {
-  //   var target = this.add.image(pointer.x,pointer.y,'target');
-  //
-  //   this.input.mouse.disableContextMenu();
+  // handlePhysics(){
   //
   // }
 
@@ -95,11 +119,25 @@ class Play extends Phaser.Scene {
       frameQuantity: 10
     });
     Phaser.Actions.PlaceOnLine(this.orbGroupLine.getChildren(), this.grabLine);
-
+    object.body.allowGravity = false;
+    object.body.immovable = true;
   }
 
   onDragEnd(pointer, object){
+
     this.orbGroupLine.setActive(false).setVisible(false);
+    switch (object.texture.key) {
+      case 'weight':
+      case 'cloud':
+        object.body.allowGravity = true;
+        object.body.immovable = false;
+      break;
+
+      case 'platformDrag' :
+      break;
+    }
+
+
   }
 
 }
