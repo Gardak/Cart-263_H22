@@ -32,7 +32,7 @@ class Play extends Phaser.Scene {
     };
 
     this.input.on('drag', this.onDrag);
-    console.log(this.platformDrag);
+    this.input.on('dragend', this.onDragEnd);
 
     //Add collision for the avatar and the platforms
     this.physics.add.collider(this.avatar, this.grounds);
@@ -40,9 +40,6 @@ class Play extends Phaser.Scene {
 
     //create inputs to move the avatar around
      this.cursors = this.input.keyboard.createCursorKeys();
-
-     //Create a function to trigger with the mouse click
-     this.input.on('pointer', this.spellOnClick, this);
 
   }
 
@@ -64,30 +61,45 @@ class Play extends Phaser.Scene {
 
     if (this.cursors.space.isDown && this.avatar.body.touching.down)
     {
-        this.avatar.setVelocityY(-200);
+        this.avatar.setVelocityY(-300);
     }
-  }
+    //Create a function to trigger with the mouse click
+    //this.input.on('pointer', this.spellOnClick, this);
+    //console.log(this);
 
-  handlePlatform() {
-    this.platformPhys.x = this.platformDrag.x;
-    this.platformPhys.y = this.platformDrag.y;
   }
 
   //Funtion called when mouse is clicked
   //Will serve as the spell/action used with the webcam
-  spellOnClick(pointer) {
-    var target = this.add.image(pointer.x,pointer.y,'target');
+  // spellOnClick(pointer) {
+  //   var target = this.add.image(pointer.x,pointer.y,'target');
+  //
+  //   this.input.mouse.disableContextMenu();
+  //
+  // }
 
-    this.input.mouse.disableContextMenu();
-    if (pointer.leftButtonReleased()) {
-              target.destroy;
-              console.log('left click released!');
-            }
-  }
-
-  onDrag(pointer, object, dragX, dragY) {
+  onDrag(pointer, object, dragX, dragY, avatar) {
     object.x = dragX;
     object.y = dragY;
+
+    if(this.orbGroupLine){
+      this.orbGroupLine.setActive(false).setVisible(false);
+    }
+    this.grabLine = new Phaser.Geom.Line(
+      this.scene.avatar.x,
+       this.scene.avatar.y,
+       object.x,
+       object.y);
+    this.orbGroupLine = this.scene.add.group({
+      key:'orb',
+      frameQuantity: 10
+    });
+    Phaser.Actions.PlaceOnLine(this.orbGroupLine.getChildren(), this.grabLine);
+
+  }
+
+  onDragEnd(pointer, object){
+    this.orbGroupLine.setActive(false).setVisible(false);
   }
 
 }
