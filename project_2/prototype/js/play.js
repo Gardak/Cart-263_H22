@@ -25,7 +25,7 @@ class Play extends Phaser.Scene {
     //Create a slow floating platform
     this.cloud = this.physics.add.sprite( 100, 700, 'cloud')
                           .setInteractive()
-                          .setGravity(0, -850)
+                          .setGravity(0, -400)
                           .setDamping(true)
                           .setDrag(0.005)
                           .setCollideWorldBounds(true);
@@ -93,7 +93,7 @@ class Play extends Phaser.Scene {
 
     if (this.cursors.space.isDown && this.avatar.body.touching.down)
     {
-        this.avatar.setVelocityY(-300);
+        this.avatar.setVelocityY(-175);
         console.log(this.platformDrag);
     }
   }
