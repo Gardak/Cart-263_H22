@@ -18,7 +18,7 @@ class Boot extends Phaser.Scene {
     this.load.image('orb', 'assets/images/orb.png');
     this.load.image('weight', 'assets/images/10t.png');
     this.load.image('cloud', 'assets/images/cloud.png');
- 
+
     this.load.on('complete', () => { this.scene.start('play'); });
   }
 

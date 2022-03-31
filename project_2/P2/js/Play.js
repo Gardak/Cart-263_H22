@@ -4,7 +4,7 @@ class Play extends Phaser.Scene {
       key: "play",
     });
   }
- 
+
   create() {
     //create the player's avatar
     this.avatar = this.physics.add.sprite(10, 720, 'avatar');
