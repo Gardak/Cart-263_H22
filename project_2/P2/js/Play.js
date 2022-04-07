@@ -15,6 +15,10 @@ class Play extends Phaser.Scene {
 
     //Create the fireball spell
     this.FireballGroup = new FireballGroup(this);
+    this.physics.world.on('collisionstart', function (event, fireball) {
+      fireball.hitSomething();
+      console.log('works?');
+    });
 
     //Create floor
     this.grounds = this.physics.add.staticGroup();
@@ -58,6 +62,7 @@ class Play extends Phaser.Scene {
       this.physics.add.collider(this.avatar, this.platformDrag);
       this.physics.add.collider(this.weight, this.platformDrag);
       this.physics.add.collider(this.cloud, this.platformDrag);
+      this.physics.add.collider(this.FireballGroup, this.platformDrag);
     }
 
     //Create the spell slots for the player
@@ -86,6 +91,7 @@ class Play extends Phaser.Scene {
     this.physics.add.collider(this.weight, this.cloud);
     this.physics.add.collider(this.cloud, this.grounds);
     this.physics.add.collider(this.weight, this.grounds);
+    this.physics.add.collider(this.FireballGroup, this.cloud);
 
     //create inputs to move the avatar around
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -136,7 +142,7 @@ class Play extends Phaser.Scene {
   }
 
   handleSpells(){
-    this.launchFireball();
+      this.launchFireball();
   }
 
   // handlePhysics(){
@@ -144,10 +150,10 @@ class Play extends Phaser.Scene {
   // }
 
   launchFireball() {
-    if (this.spellSelected !== "fireball") {
-      return;
-    }
     this.input.on("pointerdown", (pointer) => {
+      if (this.spellSelected !== "fireball") {
+        return;
+      }
       let angle = Phaser.Math.Angle.Between(
         this.avatar.x,
         this.avatar.y,
@@ -158,9 +164,7 @@ class Play extends Phaser.Scene {
       let pY = pointer.y;
       this.FireballGroup.sendFireball(this.avatar.x + 20, this.avatar.y - 20, angle, pX, pY);
     });
-
-
-  }
+}
 
   onDrag(pointer, object, dragX, dragY, avatar) {
     console.log(this.spellSelected);
@@ -212,7 +216,7 @@ class FireballGroup extends Phaser.Physics.Arcade.Group {
 
     this.createMultiple({
       classType: Fireball,
-      frameQuantity: 5,
+      frameQuantity: 1,
       active: false,
       visible: false,
       key: "fireball",
@@ -248,19 +252,21 @@ class Fireball extends Phaser.Physics.Arcade.Sprite {
     this.vy = Math.sin(angle) * 900;
 
     this.setVelocity( this.vx, this.vy);
-    this.body.onWorldBounds.add(this.hitWorldBounds, this);
-  }
-
-  hitWorldBounds(fireball){
-    fireball.destroy();
+    this.isFlying = true;
   }
 
   preUpdate(time, delta) {
     super.preUpdate(time, delta);
 
-    if(this.y <= 0) {
-      this.setActive(false);
-      this.setVisible(false);
+    if(this.y <= 0 || this.y >= 800 || this.x <= 0 || this.x >= 1000) {
+      this.hitSomething();
     }
   }
+
+  hitSomething() {
+    this.setActive(false);
+    this.setVisible(false);
+    this.isFlying = false;
+  }
+
 }
