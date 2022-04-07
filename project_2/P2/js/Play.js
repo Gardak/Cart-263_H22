@@ -14,7 +14,7 @@ class Play extends Phaser.Scene {
     this.avatar.setCollideWorldBounds(true);
 
     //Create the fireball spell
-    //this.FireballGroup = new FireballGroup(this);
+    this.FireballGroup = new FireballGroup(this);
 
     //Create floor
     this.grounds = this.physics.add.staticGroup();
@@ -148,8 +148,18 @@ class Play extends Phaser.Scene {
       return;
     }
     this.input.on("pointerdown", (pointer) => {
-      this.FireballGroup.sendFireball(this.avatar.x + 20, this.avatar.y - 20);
+      let angle = Phaser.Math.Angle.Between(
+        this.avatar.x,
+        this.avatar.y,
+        pointer.x,
+        pointer.y
+      );
+      let pX = pointer.x;
+      let pY = pointer.y;
+      this.FireballGroup.sendFireball(this.avatar.x + 20, this.avatar.y - 20, angle, pX, pY);
     });
+
+
   }
 
   onDrag(pointer, object, dragX, dragY, avatar) {
@@ -202,33 +212,55 @@ class FireballGroup extends Phaser.Physics.Arcade.Group {
 
     this.createMultiple({
       classType: Fireball,
-      frameQuantity: 20,
+      frameQuantity: 5,
       active: false,
       visible: false,
       key: "fireball",
     });
   }
 
-  sendFireball( x, y) {
+  sendFireball( x, y, angle, px, py) {
     const fire = this.getFirstDead(false);
     if (fire) {
-      fire.ball( x, y);
+      fire.ball( x, y, angle, px, py);
     }
   }
 
 }
+
+
+
 
 class Fireball extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y) {
     super(scene, x, y, "fireball");
   }
 
-  ball( x, y) {
-    this.body.reset(x,y);
+  ball( x, y, angle, px, py) {
 
+
+    this.body.reset(x,y);
+    this.rotation = angle;
     this.setActive(true);
     this.setVisible(true);
 
-    this.setVelocityY(-900);
+    this.vx = Math.cos(angle) * 900;
+    this.vy = Math.sin(angle) * 900;
+
+    this.setVelocity( this.vx, this.vy);
+    this.body.onWorldBounds.add(this.hitWorldBounds, this);
+  }
+
+  hitWorldBounds(fireball){
+    fireball.destroy();
+  }
+
+  preUpdate(time, delta) {
+    super.preUpdate(time, delta);
+
+    if(this.y <= 0) {
+      this.setActive(false);
+      this.setVisible(false);
+    }
   }
 }
