@@ -7,23 +7,27 @@ class Play extends Phaser.Scene {
   }
 
   create() {
+
     let groundFloorY = config.height - 25;
+
+    console.log(this);
 
     //create the player's avatar
     this.avatar = this.physics.add.sprite(10, groundFloorY - 50, "avatar");
+    this.avatar.scepterX = 20;
     this.avatar.setCollideWorldBounds(true);
 
     //Create the fireball spell
     this.FireballGroup = new FireballGroup(this);
 
     //Create a wooden platform
-    this.woodPlatform =
+    //this.woodPlatform =
 
     //Create floor
     this.grounds = this.physics.add.staticGroup();
-    this.grounds.create(500, groundFloorY, "groundFloor");
+    this.grounds.create(this.scale.width/2, groundFloorY, "groundFloor");
 
-    //Create an object which is still impacted by gravity the player will have to move
+    //Create an object which is still affected by gravity the player will have to move
     this.weight = this.physics.add.sprite(800, 100, "weight")
       .setInteractive()
       .setGravity(0, 1000)
@@ -116,9 +120,11 @@ class Play extends Phaser.Scene {
     if (this.keyLeft.isDown) {
       this.avatar.setVelocityX(-200);
       this.avatar.flipX = true;
+      this.avatar.scepterX = -20;
     } else if (this.keyRight.isDown) {
       this.avatar.setVelocityX(200);
       this.avatar.flipX = false;
+      this.avatar.scepterX = 20;
     } else {
       this.avatar.setVelocityX(0);
     }
@@ -161,7 +167,7 @@ class Play extends Phaser.Scene {
       );
       let pX = pointer.x;
       let pY = pointer.y;
-      this.FireballGroup.sendFireball(this.avatar.x + 20, this.avatar.y - 20, angle, pX, pY);
+      this.FireballGroup.sendFireball(this.avatar.x + this.avatar.scepterX, this.avatar.y - 20, angle, pX, pY);
     });
 }
 
@@ -177,7 +183,7 @@ class Play extends Phaser.Scene {
       this.orbGroupLine.setActive(false).setVisible(false);
     }
     this.grabLine = new Phaser.Geom.Line(
-      this.avatar.x + 20,
+      this.avatar.x + this.avatar.scepterX,
       this.avatar.y - 20,
       object.x,
       object.y
@@ -228,13 +234,6 @@ class FireballGroup extends Phaser.Physics.Arcade.Group {
       fire.ball( x, y, angle, px, py);
     }
   }
-
-  impact() {
-    console.log('works?');
-    const fire = this.getFirstDead(false);
-      fire.hitSomething();
-  }
-
 }
 
 
@@ -272,6 +271,7 @@ class Fireball extends Phaser.Physics.Arcade.Sprite {
     this.setActive(false);
     this.setVisible(false);
     this.isFlying = false;
+
     this.x = -50;
     this.y = -50;
   }

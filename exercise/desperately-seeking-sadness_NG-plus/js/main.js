@@ -13,7 +13,7 @@ of thumbs up as an emoji with spaceship controls
 let config = {
   type: Phaser.AUTO,
   width: 800,
-  height: 600,
+  height: 700,
   physics: { default: 'arcade' },
   scene: [Boot, Play]
 };

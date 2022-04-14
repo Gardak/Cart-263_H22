@@ -12,8 +12,8 @@ author, and this description to match your project!
 
 let config = {
   type: Phaser.AUTO,
-  width: 1000,
-  height: 800,
+  width: 1900,
+  height: 900,
   backgroundColor: (16, 28, 33),
   physics: { default: 'arcade',
             arcade: {
