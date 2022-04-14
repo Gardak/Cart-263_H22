@@ -14,7 +14,7 @@ class Boot extends Phaser.Scene {
     this.load.image('bush', 'assets/images/bush.png');
     this.load.image('flowey', 'assets/images/flowey.png');
 
-    this.load.audio('laugh', 'assets/sounds/Flowey-laugh.mp3');
+    this.load.audio('laugh', 'assets/sounds/pickup.mp3');
     this.load.audio('getRupee', 'assets/sounds/pickup.mp3');
 
     this.load.on('complete', () => { this.scene.start('play'); });
