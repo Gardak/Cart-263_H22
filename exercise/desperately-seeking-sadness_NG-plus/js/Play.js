@@ -17,8 +17,13 @@ class Play extends Phaser.Scene {
 
     //Create an enemy slowly chasing after the player
     this.enemy = this.physics.add.sprite(0, 300, 'flowey');
+    this.enemySpeedStart = 20;
+    this.enemySpeed = this.enemySpeedStart;
+    this.enemySpeedUp = 10;
 
     this.laugh = this.sound.add('laugh');
+    this.getRupee = this.sound.add('getRupee');
+
 
     //Create a group of obstacles hidding the goal from the player
     this.obstacles = this.physics.add.group({
@@ -27,8 +32,8 @@ class Play extends Phaser.Scene {
       //collideWorldBounds: true,
       bounceX: 0.2,
       bounceY: 0.2,
-      dragX: 10,
-      dragY: 10
+      dragX: 5,
+      dragY: 5
     });
     //Position the obstacles at random positions throughout the canvas
     Phaser.Actions.RandomRectangle(this.obstacles.getChildren(), this.physics.world.bounds);
@@ -47,15 +52,16 @@ class Play extends Phaser.Scene {
      this.cursors = this.input.keyboard.createCursorKeys();
 
      this.score = 0;
-     this.scoreText = this.add.text(20, 20, 'Gems: 0', { fontSize: '32px', fill: '#0bde00' });
+     this.scoreText = this.add.text(20, 20, 'Gems: 0', { fontSize: '32px', fill: '#00ff4c' });
   }
 
   //Called when the avatar and the goal overlap
   getGoal(avatar, goal){
     //Reset the goal at a random position within the game's borders
     Phaser.Actions.RandomRectangle([goal], this.physics.world.bounds);
-
+    this.getRupee.play();
     this.score += 1;
+    this.enemySpeed += this.enemySpeedUp;
   }
 
 
@@ -64,6 +70,7 @@ class Play extends Phaser.Scene {
     this.laugh.play();
     Phaser.Actions.RandomRectangle([enemy],this.physics.world.bounds);
     this.score = 0;
+    this.enemySpeed = this.enemySpeedStart;
   }
 
 
@@ -76,7 +83,7 @@ class Play extends Phaser.Scene {
     this.physics.world.wrap(this.obstacles,32);
         this.physics.world.wrap(this.enemy,32);
     //Have the enemy chase the avatar
-    this.physics.moveToObject(this.enemy, this.avatar, 80);
+    this.physics.moveToObject(this.enemy, this.avatar, this.enemySpeed);
 
     this.scoreText.setText('Gems ' + this.score);
   }
