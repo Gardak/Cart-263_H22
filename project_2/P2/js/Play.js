@@ -15,18 +15,16 @@ class Play extends Phaser.Scene {
 
     //Create the fireball spell
     this.FireballGroup = new FireballGroup(this);
-    this.physics.world.on('collisionstart', function (event, fireball) {
-      fireball.hitSomething();
-      console.log('works?');
-    });
+
+    //Create a wooden platform
+    this.woodPlatform =
 
     //Create floor
     this.grounds = this.physics.add.staticGroup();
     this.grounds.create(500, groundFloorY, "groundFloor");
 
     //Create an object which is still impacted by gravity the player will have to move
-    this.weight = this.physics.add
-      .sprite(800, 100, "weight")
+    this.weight = this.physics.add.sprite(800, 100, "weight")
       .setInteractive()
       .setGravity(0, 1000)
       .setDamping(true)
@@ -36,8 +34,7 @@ class Play extends Phaser.Scene {
     this.input.setDraggable(this.weight);
 
     //Create a slow floating platform
-    this.cloud = this.physics.add
-      .sprite(100, 700, "cloud")
+    this.cloud = this.physics.add.sprite(100, 700, "cloud")
       .setInteractive()
       .setGravity(0, -350)
       .setDamping(true)
@@ -91,7 +88,9 @@ class Play extends Phaser.Scene {
     this.physics.add.collider(this.weight, this.cloud);
     this.physics.add.collider(this.cloud, this.grounds);
     this.physics.add.collider(this.weight, this.grounds);
-    this.physics.add.collider(this.FireballGroup, this.cloud);
+    this.physics.add.collider(this.grounds, this.FireballGroup);
+    this.physics.add.collider(this.weight, this.FireballGroup);
+    this.physics.add.collider(this.cloud, this.FireballGroupd);
 
     //create inputs to move the avatar around
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -185,7 +184,7 @@ class Play extends Phaser.Scene {
     );
     this.orbGroupLine = this.add.group({
       key: "telekinesis",
-      frameQuantity: 10,
+      frameQuantity: 20,
     });
     Phaser.Actions.PlaceOnLine(this.orbGroupLine.getChildren(), this.grabLine);
     object.body.allowGravity = false;
@@ -230,6 +229,12 @@ class FireballGroup extends Phaser.Physics.Arcade.Group {
     }
   }
 
+  impact() {
+    console.log('works?');
+    const fire = this.getFirstDead(false);
+      fire.hitSomething();
+  }
+
 }
 
 
@@ -258,7 +263,7 @@ class Fireball extends Phaser.Physics.Arcade.Sprite {
   preUpdate(time, delta) {
     super.preUpdate(time, delta);
 
-    if(this.y <= 0 || this.y >= 800 || this.x <= 0 || this.x >= 1000) {
+    if(this.y <= 0 || this.y >= 800 || this.x <= 0 || this.x >= 1000 || !this.body.touching.none) {
       this.hitSomething();
     }
   }
@@ -267,6 +272,8 @@ class Fireball extends Phaser.Physics.Arcade.Sprite {
     this.setActive(false);
     this.setVisible(false);
     this.isFlying = false;
+    this.x = -50;
+    this.y = -50;
   }
 
 }
