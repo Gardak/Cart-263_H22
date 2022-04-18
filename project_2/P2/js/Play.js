@@ -32,11 +32,11 @@ class Play extends Phaser.Scene {
     this.grounds.create(this.scale.width/2, groundFloorY, "groundFloor");
 
     //Create an object which is still affected by gravity the player will have to move
-    this.lantern = this.physics.add.sprite(800, 100, "lantern")
+    this.lantern = this.physics.add.sprite(200, 100, "lantern")
       .setInteractive()
       .setGravity(0, 1000)
       .setDamping(true)
-      .setDragX(0.00001)
+      .setDrag(0.01, 1)
       .setCollideWorldBounds(true);
 
     this.input.setDraggable(this.lantern);
@@ -46,7 +46,7 @@ class Play extends Phaser.Scene {
       .setInteractive()
       .setGravity(0, -350)
       .setDamping(true)
-      .setDrag(0.005)
+      .setAngularDrag(0.005)
       .setCollideWorldBounds(true);
 
     this.input.setDraggable(this.cloud);
@@ -91,6 +91,8 @@ class Play extends Phaser.Scene {
     this.input.on("dragend", this.onDragEnd.bind(this));
     this.telekinesisLenghtMax = 200;
     this.telekinesisLenght = 0;
+    this.telekinesisCircle = this.add.image( this.avatar.x, this.avatar.y, "circle");
+    this.telekinesisCircle.setVisible(false);
 
     //Add collision between objects
     this.physics.add.collider(this.avatar, this.grounds);
@@ -149,6 +151,7 @@ class Play extends Phaser.Scene {
     //Avatar's jump
     if (this.cursors.space.isDown && this.avatar.body.touching.down) {
       this.avatar.setVelocityY(-175);
+      console.log(this.lantern);
     }
 
     //Avatar's spells
@@ -199,20 +202,38 @@ class Play extends Phaser.Scene {
       key: "telekinesis",
       frameQuantity: 20,
     });
+
+    this.telekinesisCircle.x = this.avatar.x;
+    this.telekinesisCircle.y = this.avatar.y;
+    this.telekinesisCircle.setVisible(true);
+
+
     Phaser.Actions.PlaceOnLine(this.orbGroupLine.getChildren(), this.grabLine);
     object.body.allowGravity = false;
     object.body.immovable = true;
   }
 
   onDragEnd(pointer, object) {
+
     if (this.spellSelected !== "telekinesis") {
       return;
     }
+
     object.body.allowDrag = false;
-    //setTimeout(this.setDraggable, 1000, object);
+
     this.orbGroupLine.setActive(false).setVisible(false);
+    this.telekinesisCircle.setVisible(false);
+
     switch (object.texture.key) {
       case "lantern":
+      object.body.allowGravity = true;
+      object.body.immovable = false;
+      object.setGravity(0, 1000)
+      object.setDamping(true)
+      object.setAngularDrag(0.01, 1)
+      console.log(object);
+      break;
+
       case "cloud":
         object.body.allowGravity = true;
         object.body.immovable = false;
@@ -223,12 +244,6 @@ class Play extends Phaser.Scene {
 
     }
   }
-
-setDraggable(object) {
-  console.log('triggers');
-
-  object.body.allowDrag = true;
-}
 
 //Function called when the player mouse clicks with the fireball spell selected
 launchFireball() {

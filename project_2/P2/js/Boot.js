@@ -13,6 +13,7 @@ class Boot extends Phaser.Scene {
     this.load.image('avatar', 'assets/images/mage.png');
     this.load.image('telekinesisIcon', 'assets/images/spells/telekinesis_icon.png');
     this.load.image('telekinesis', 'assets/images/spells/telekinesis.png');
+    this.load.image('circle', 'assets/images/spells/circle.png');
     this.load.image('fireballIcon', 'assets/images/spells/fireball_icon.png');
     this.load.image('fireball', 'assets/images/spells/fireball.png');
 
