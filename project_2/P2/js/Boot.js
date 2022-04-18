@@ -18,10 +18,11 @@ class Boot extends Phaser.Scene {
 
     //Load in the level structure
     this.load.image('groundFloor', 'assets/images/groundFloor.png');
+    this.load.image('brickWall', 'assets/images/brick_wall.png');
 
     //Load in the dragable objects
     this.load.image('platformDrag', 'assets/images/platform_earth.png');
-    this.load.image('weight', 'assets/images/10t.png');
+    this.load.image('lantern', 'assets/images/lantern.png');
     this.load.image('cloud', 'assets/images/cloud.png');
 
     //Load in the objectives

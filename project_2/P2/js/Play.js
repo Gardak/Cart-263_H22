@@ -10,7 +10,11 @@ class Play extends Phaser.Scene {
 
     let groundFloorY = config.height - 25;
 
-    console.log(this);
+    this.lights.enable().setAmbientColor(0x333333);
+    this.light = this.lights.addLight(180, 80, 200).setColor(0xffffff).setIntensity(2);
+
+    //Insert the brick wall background
+    this.background = this.add.image(this.scale.width/2,this.scale.height/2, "brickWall");
 
     //create the player's avatar
     this.avatar = this.physics.add.sprite(10, groundFloorY - 50, "avatar");
@@ -28,14 +32,14 @@ class Play extends Phaser.Scene {
     this.grounds.create(this.scale.width/2, groundFloorY, "groundFloor");
 
     //Create an object which is still affected by gravity the player will have to move
-    this.weight = this.physics.add.sprite(800, 100, "weight")
+    this.lantern = this.physics.add.sprite(800, 100, "lantern")
       .setInteractive()
       .setGravity(0, 1000)
       .setDamping(true)
       .setDragX(0.00001)
       .setCollideWorldBounds(true);
 
-    this.input.setDraggable(this.weight);
+    this.input.setDraggable(this.lantern);
 
     //Create a slow floating platform
     this.cloud = this.physics.add.sprite(100, 700, "cloud")
@@ -53,7 +57,8 @@ class Play extends Phaser.Scene {
       this.platformDrag = this.physics.add
         .image(500, platformY, "platformDrag")
         .setInteractive()
-        .setCollideWorldBounds(true);
+        .setCollideWorldBounds(true)
+        .setPipeline('Light2D');
 
       this.platformDrag.body.allowGravity = false;
       this.platformDrag.body.immovable = true;
@@ -61,7 +66,7 @@ class Play extends Phaser.Scene {
       platformY = platformY + 100;
       this.physics.add.collider(this.grounds, this.platformDrag);
       this.physics.add.collider(this.avatar, this.platformDrag);
-      this.physics.add.collider(this.weight, this.platformDrag);
+      this.physics.add.collider(this.lantern, this.platformDrag);
       this.physics.add.collider(this.cloud, this.platformDrag);
       this.physics.add.collider(this.FireballGroup, this.platformDrag);
     }
@@ -84,17 +89,19 @@ class Play extends Phaser.Scene {
     //Functions when the player drags the objects around
     this.input.on("drag", this.onDrag.bind(this));
     this.input.on("dragend", this.onDragEnd.bind(this));
+    this.telekinesisLenghtMax = 200;
+    this.telekinesisLenght = 0;
 
     //Add collision between objects
     this.physics.add.collider(this.avatar, this.grounds);
-    this.physics.add.collider(this.avatar, this.weight);
+    this.physics.add.collider(this.avatar, this.lantern);
     this.physics.add.collider(this.avatar, this.cloud);
-    this.physics.add.collider(this.weight, this.cloud);
+    this.physics.add.collider(this.lantern, this.cloud);
     this.physics.add.collider(this.cloud, this.grounds);
-    this.physics.add.collider(this.weight, this.grounds);
+    this.physics.add.collider(this.lantern, this.grounds);
     this.physics.add.collider(this.grounds, this.FireballGroup);
-    this.physics.add.collider(this.weight, this.FireballGroup);
-    this.physics.add.collider(this.cloud, this.FireballGroupd);
+    this.physics.add.collider(this.lantern, this.FireballGroup);
+    this.physics.add.collider(this.cloud, this.FireballGroup);
 
     //create inputs to move the avatar around
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -102,6 +109,14 @@ class Play extends Phaser.Scene {
     this.keyRight = this.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.D
     );
+
+    //Apply the lighting effect on every objects
+    this.background.setPipeline('Light2D');
+    this.avatar.setPipeline('Light2D');
+    this.lantern.setPipeline('Light2D');
+    this.cloud.setPipeline('Light2D');
+
+
 
     //Create inputs to toggle spells
     this.key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
@@ -112,6 +127,7 @@ class Play extends Phaser.Scene {
   update() {
     this.handleInput();
     this.handleSpells();
+    this.handlePhysics();
   }
 
   //Setup the inputs to control the avatar
@@ -125,6 +141,7 @@ class Play extends Phaser.Scene {
       this.avatar.setVelocityX(200);
       this.avatar.flipX = false;
       this.avatar.scepterX = 20;
+
     } else {
       this.avatar.setVelocityX(0);
     }
@@ -150,32 +167,22 @@ class Play extends Phaser.Scene {
       this.launchFireball();
   }
 
-  // handlePhysics(){
-  //
-  // }
-
-  launchFireball() {
-    this.input.on("pointerdown", (pointer) => {
-      if (this.spellSelected !== "fireball") {
-        return;
-      }
-      let angle = Phaser.Math.Angle.Between(
-        this.avatar.x,
-        this.avatar.y,
-        pointer.x,
-        pointer.y
-      );
-      let pX = pointer.x;
-      let pY = pointer.y;
-      this.FireballGroup.sendFireball(this.avatar.x + this.avatar.scepterX, this.avatar.y - 20, angle, pX, pY);
-    });
-}
+  handlePhysics(){
+    this.light.x = this.lantern.x;
+    this.light.y = this.lantern.y;
+  }
 
   onDrag(pointer, object, dragX, dragY, avatar) {
-    console.log(this.spellSelected);
-    if (this.spellSelected !== "telekinesis") {
+
+    this.telekinesisLenght = Phaser.Math.Distance.Between( this.avatar.x, this.avatar.y, object.x, object.y);
+    //console.log(this.telekinesisLenght);
+
+    if (this.spellSelected !== "telekinesis" || this.telekinesisLenght > this.telekinesisLenghtMax) {
+      this.onDragEnd( pointer, object);
       return;
     }
+
+
     object.x = dragX;
     object.y = dragY;
 
@@ -201,9 +208,11 @@ class Play extends Phaser.Scene {
     if (this.spellSelected !== "telekinesis") {
       return;
     }
+    object.body.allowDrag = false;
+    //setTimeout(this.setDraggable, 1000, object);
     this.orbGroupLine.setActive(false).setVisible(false);
     switch (object.texture.key) {
-      case "weight":
+      case "lantern":
       case "cloud":
         object.body.allowGravity = true;
         object.body.immovable = false;
@@ -211,10 +220,36 @@ class Play extends Phaser.Scene {
 
       case "platformDrag":
         break;
+
     }
   }
+
+setDraggable(object) {
+  console.log('triggers');
+
+  object.body.allowDrag = true;
 }
 
+//Function called when the player mouse clicks with the fireball spell selected
+launchFireball() {
+  this.input.on("pointerdown", (pointer) => {
+    if (this.spellSelected !== "fireball") {
+      return;
+    }
+    let angle = Phaser.Math.Angle.Between(
+      this.avatar.x,
+      this.avatar.y,
+      pointer.x,
+      pointer.y
+    );
+    let pX = pointer.x;
+    let pY = pointer.y;
+    this.FireballGroup.sendFireball(this.avatar.x + this.avatar.scepterX, this.avatar.y - 20, angle, pX, pY);
+  });
+}
+}
+
+//Create a group of fireball to cycle through
 class FireballGroup extends Phaser.Physics.Arcade.Group {
   constructor(scene) {
     super(scene.physics.world, scene);
@@ -228,6 +263,7 @@ class FireballGroup extends Phaser.Physics.Arcade.Group {
     });
   }
 
+  //The fireball movement
   sendFireball( x, y, angle, px, py) {
     const fire = this.getFirstDead(false);
     if (fire) {
@@ -244,9 +280,10 @@ class Fireball extends Phaser.Physics.Arcade.Sprite {
     super(scene, x, y, "fireball");
   }
 
+  //The fireball visual properties
   ball( x, y, angle, px, py) {
 
-
+    this.setPipeline('Light2D');
     this.body.reset(x,y);
     this.rotation = angle;
     this.setActive(true);
@@ -259,14 +296,16 @@ class Fireball extends Phaser.Physics.Arcade.Sprite {
     this.isFlying = true;
   }
 
+  //Update the location of the fireball
   preUpdate(time, delta) {
     super.preUpdate(time, delta);
 
-    if(this.y <= 0 || this.y >= 800 || this.x <= 0 || this.x >= 1000 || !this.body.touching.none) {
+    if(this.y <= 0 || this.y >= 900 || this.x <= 0 || this.x >= 1900 || !this.body.touching.none) {
       this.hitSomething();
     }
   }
 
+  //Function when the fireball leaves the screen or interacts with hits something
   hitSomething() {
     this.setActive(false);
     this.setVisible(false);

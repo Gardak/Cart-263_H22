@@ -19,7 +19,7 @@ let config = {
             arcade: {
               gravity: {y:200},
               debug: false
-            }
+            } 
           },
   scene: [Boot, Play]
 };
