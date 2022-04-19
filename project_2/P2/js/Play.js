@@ -11,18 +11,43 @@ class Play extends Phaser.Scene {
     let groundFloorY = config.height - 25;
 
     this.lights.enable().setAmbientColor(0x333333);
-    this.light = this.lights.addLight(180, 80, 200).setColor(0xffffff).setIntensity(2);
+    this.lightLantern = this.lights.addLight(180, 80, 200).setColor(0xffffff).setIntensity(2);
+
 
     //Insert the brick wall background
     this.background = this.add.image(this.scale.width/2,this.scale.height/2, "brickWall");
 
+    //Place the pillars and the exit door
+    this.firePillar = this.add.sprite(this.scale.width/2 - 200,this.scale.height - 90, "firePillar");
+    this.icePillar = this.add.sprite(this.scale.width/2 + 200,this.scale.height - 90, "icePillar");
+    this.stoneGate = this.add.sprite(this.scale.width/2,this.scale.height - 250, "stoneGate");
+
+    //Place the game's platforms
+    this.platform1 = this.physics.add.sprite( 150, this.scale.height-190, 'platform1')
+    this.platform1.body.allowGravity = false;
+    this.platform1.body.immovable = true;
+
+    this.platform2 = this.physics.add.sprite( 600, this.scale.height-190, 'platform2')
+    this.platform2.body.allowGravity = false;
+    this.platform2.body.immovable = true;
+
+    this.platform3 = this.physics.add.sprite( 390, this.scale.height-70, 'platform3')
+    this.platform3.body.allowGravity = false;
+    this.platform3.body.immovable = true;
+
+
+
     //create the player's avatar
-    this.avatar = this.physics.add.sprite(10, groundFloorY - 50, "avatar");
+    this.avatarStartX = 150;
+    this.avatarStartY = groundFloorY - 50;
+    this.avatar = this.physics.add.sprite(this.avatarStartX, this.avatarStartY, "avatar");
     this.avatar.scepterX = 20;
     this.avatar.setCollideWorldBounds(true);
 
     //Create the fireball spell
     this.FireballGroup = new FireballGroup(this);
+    this.fireballOut = -200;
+    this.lightFireball = this.lights.addLight( this.fireballOut, this.fireballOut, 80).setColor(0xF62100).setIntensity(2);
 
     //Create a wooden platform
     //this.woodPlatform =
@@ -32,7 +57,7 @@ class Play extends Phaser.Scene {
     this.grounds.create(this.scale.width/2, groundFloorY, "groundFloor");
 
     //Create an object which is still affected by gravity the player will have to move
-    this.lantern = this.physics.add.sprite(200, 100, "lantern")
+    this.lantern = this.physics.add.sprite(this.avatarStartX + 50, this.avatarStartY, "lantern")
       .setInteractive()
       .setGravity(0, 1000)
       .setDamping(true)
@@ -41,12 +66,19 @@ class Play extends Phaser.Scene {
 
     this.input.setDraggable(this.lantern);
 
+    this.crateGreen = this.physics.add.sprite( 50, this.avatarStartY - 20, "crateGreen")
+      .setInteractive()
+      .setDamping(true)
+      .setDrag(0.0001, 1)
+      .setCollideWorldBounds(true);
+
+    this.input.setDraggable(this.crateGreen);
+
     //Create a slow floating platform
     this.cloud = this.physics.add.sprite(100, 700, "cloud")
       .setInteractive()
       .setGravity(0, -350)
       .setDamping(true)
-      .setAngularDrag(0.005)
       .setCollideWorldBounds(true);
 
     this.input.setDraggable(this.cloud);
@@ -98,12 +130,40 @@ class Play extends Phaser.Scene {
     this.physics.add.collider(this.avatar, this.grounds);
     this.physics.add.collider(this.avatar, this.lantern);
     this.physics.add.collider(this.avatar, this.cloud);
+
     this.physics.add.collider(this.lantern, this.cloud);
-    this.physics.add.collider(this.cloud, this.grounds);
-    this.physics.add.collider(this.lantern, this.grounds);
-    this.physics.add.collider(this.grounds, this.FireballGroup);
     this.physics.add.collider(this.lantern, this.FireballGroup);
+    this.physics.add.collider(this.lantern, this.grounds);
+    this.physics.add.collider(this.lantern, this.firePillar);
+
+    this.physics.add.collider(this.cloud, this.grounds);
     this.physics.add.collider(this.cloud, this.FireballGroup);
+
+    this.physics.add.collider(this.grounds, this.FireballGroup);
+
+    this.physics.add.collider(this.crateGreen, this.FireballGroup);
+    this.physics.add.collider(this.crateGreen, this.avatar);
+    this.physics.add.collider(this.crateGreen, this.lantern);
+    this.physics.add.collider(this.crateGreen, this.cloud);
+    this.physics.add.collider(this.crateGreen, this.grounds);
+
+    this.physics.add.collider(this.platform1, this.FireballGroup);
+    this.physics.add.collider(this.platform1, this.avatar);
+    this.physics.add.collider(this.platform1, this.lantern);
+    this.physics.add.collider(this.platform1, this.cloud);
+    this.physics.add.collider(this.platform1, this.crateGreen);
+
+    this.physics.add.collider(this.platform2, this.FireballGroup);
+    this.physics.add.collider(this.platform2, this.avatar);
+    this.physics.add.collider(this.platform2, this.lantern);
+    this.physics.add.collider(this.platform2, this.cloud);
+    this.physics.add.collider(this.platform2, this.crateGreen);
+
+    this.physics.add.collider(this.platform3, this.FireballGroup);
+    this.physics.add.collider(this.platform3, this.avatar);
+    this.physics.add.collider(this.platform3, this.lantern);
+    this.physics.add.collider(this.platform3, this.cloud);
+    this.physics.add.collider(this.platform3, this.crateGreen);
 
     //create inputs to move the avatar around
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -116,9 +176,17 @@ class Play extends Phaser.Scene {
     this.background.setPipeline('Light2D');
     this.avatar.setPipeline('Light2D');
     this.lantern.setPipeline('Light2D');
+    this.crateGreen.setPipeline('Light2D');
+
+    this.firePillar.setPipeline('Light2D');
+    this.icePillar.setPipeline('Light2D');
+    this.stoneGate.setPipeline('Light2D');
+
     this.cloud.setPipeline('Light2D');
 
-
+    this.platform1.setPipeline('Light2D');
+    this.platform2.setPipeline('Light2D');
+    this.platform3.setPipeline('Light2D');
 
     //Create inputs to toggle spells
     this.key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
@@ -151,7 +219,6 @@ class Play extends Phaser.Scene {
     //Avatar's jump
     if (this.cursors.space.isDown && this.avatar.body.touching.down) {
       this.avatar.setVelocityY(-175);
-      console.log(this.lantern);
     }
 
     //Avatar's spells
@@ -168,11 +235,18 @@ class Play extends Phaser.Scene {
 
   handleSpells(){
       this.launchFireball();
+      if (this.FireballGroup.children.entries[0].isFlying) {
+        this.lightFireball.setVisible(true);
+      } else {
+        this.lightFireball.setVisible(false);
+      }
+      this.telekinesisCircle.rotation += 0.001;
+
   }
 
   handlePhysics(){
-    this.light.x = this.lantern.x;
-    this.light.y = this.lantern.y;
+    this.lightLantern.x = this.lantern.x;
+    this.lightLantern.y = this.lantern.y;
   }
 
   onDrag(pointer, object, dragX, dragY, avatar) {
@@ -219,25 +293,17 @@ class Play extends Phaser.Scene {
       return;
     }
 
-    object.body.allowDrag = false;
-
     this.orbGroupLine.setActive(false).setVisible(false);
     this.telekinesisCircle.setVisible(false);
 
     switch (object.texture.key) {
+
+      case "cloud":
+      case "crateGreen":
       case "lantern":
       object.body.allowGravity = true;
       object.body.immovable = false;
-      object.setGravity(0, 1000)
-      object.setDamping(true)
-      object.setAngularDrag(0.01, 1)
-      console.log(object);
       break;
-
-      case "cloud":
-        object.body.allowGravity = true;
-        object.body.immovable = false;
-        break;
 
       case "platformDrag":
         break;
@@ -260,7 +326,12 @@ launchFireball() {
     let pX = pointer.x;
     let pY = pointer.y;
     this.FireballGroup.sendFireball(this.avatar.x + this.avatar.scepterX, this.avatar.y - 20, angle, pX, pY);
+
   });
+  console.log(this.FireballGroup);
+  this.lightFireball.x = this.FireballGroup.children.entries[0].x;
+  this.lightFireball.y = this.FireballGroup.children.entries[0].y;
+
 }
 }
 
@@ -284,6 +355,7 @@ class FireballGroup extends Phaser.Physics.Arcade.Group {
     if (fire) {
       fire.ball( x, y, angle, px, py);
     }
+
   }
 }
 
@@ -309,6 +381,7 @@ class Fireball extends Phaser.Physics.Arcade.Sprite {
 
     this.setVelocity( this.vx, this.vy);
     this.isFlying = true;
+
   }
 
   //Update the location of the fireball
@@ -326,8 +399,9 @@ class Fireball extends Phaser.Physics.Arcade.Sprite {
     this.setVisible(false);
     this.isFlying = false;
 
-    this.x = -50;
-    this.y = -50;
+    this.x = this.fireballOut;
+    this.y = this.fireballOut;
+    this.isFlying = false;
   }
 
 }
