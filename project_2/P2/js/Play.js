@@ -32,7 +32,10 @@ class Play extends Phaser.Scene {
     this.stoneGate = this.add.sprite(this.scale.width/2,this.scale.height - 250, "stoneGate");
 
     //Place the elements for the cloud potion puzzle
-    this.cauldron = this.add.sprite(this.scale.width - 400,this.scale.height - 75, "cauldron");
+    this.cauldron = this.physics.add.sprite(this.scale.width - 400,this.scale.height - 75, "cauldron");
+    this.cauldron.body.allowGravity = false;
+    this.cauldron.body.immovable = true;
+
     this.cauldronFire = this.lights.addLight(this.scale.width - 400, this.scale.height, 100).setColor(0xF62100).setIntensity(2);
     this.potion = this.physics.add.sprite(this.scale.width - 300,this.scale.height - 435, "potion")
       .setInteractive()
@@ -84,10 +87,11 @@ class Play extends Phaser.Scene {
     this.input.setDraggable(this.crateOrange);
 
     //Create a slow floating platform
-    this.cloud = this.physics.add.sprite(100, 700, "cloud")
+    this.cloud = this.physics.add.sprite(100, 800, "cloud")
       .setInteractive()
-      .setGravity(0, -350)
+      .setGravity(0, -4000)
       .setDamping(true)
+      .setDrag(1, 0.00000000001)
       .setCollideWorldBounds(true);
 
     this.input.setDraggable(this.cloud);
@@ -172,6 +176,7 @@ class Play extends Phaser.Scene {
     this.physics.add.collider(this.lantern, this.firePillar);
     this.physics.add.collider(this.lantern, this.potion);
 
+    this.physics.add.collider(this.potion, this.cauldron, this.potionMix);
     this.physics.add.collider(this.grounds, this.FireballGroup);
     this.physics.add.collider(this.grounds, this.potion);
 
@@ -285,7 +290,6 @@ class Play extends Phaser.Scene {
       this.launchFireball();
       if (this.FireballGroup.children.entries[0].isFlying) {
         this.lightFireball.setVisible(true);
-        setTimeout(this.fireballTrail, 1000);
       } else {
         this.lightFireball.setVisible(false);
       }
@@ -304,6 +308,15 @@ class Play extends Phaser.Scene {
     if (this.cauldronFire.intensity >= 3){
       this.cauldronFire.intensity = 1.5;
     }
+    if (!this.potion.active) {
+        this.potionLight.setVisible(false);
+    }
+  }
+
+  potionMix(potion) {
+    potion.setVisible(false);
+    potion.setActive(false);
+
   }
 
   onDrag(pointer, object, dragX, dragY, avatar) {
@@ -427,7 +440,7 @@ class Fireball extends Phaser.Physics.Arcade.Sprite {
   //The fireball visual properties
   ball( x, y, angle, px, py) {
 
-    this.fireballSpeed = 1200;
+    this.fireballSpeed = 1500;
 
     this.setPipeline('Light2D');
     this.body.reset(x,y);
