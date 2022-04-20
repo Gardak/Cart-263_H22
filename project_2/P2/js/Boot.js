@@ -24,12 +24,14 @@ class Boot extends Phaser.Scene {
     this.load.image('icePillar', 'assets/images/decor/ice_pillar.png');
     this.load.image('stoneGate', 'assets/images/decor/stone_gate.png');
     this.load.image('cauldron', 'assets/images/decor/cauldron.png');
+    this.load.image('doorOffice', 'assets/images/decor/door_office.png');
 
     //Load in the platforms
     this.load.image('platform1', 'assets/images/platforms/platform-1.png');
     this.load.image('platform2', 'assets/images/platforms/platform-2.png');
     this.load.image('platform3', 'assets/images/platforms/platform-3.png');
     this.load.image('platform4', 'assets/images/platforms/platform-4.png');
+    this.load.image('balconyWall', 'assets/images/platforms/balcony_wall.png');
 
     //Load in the dragable objects
     this.load.image('platformDrag', 'assets/images/platform_earth.png');
@@ -38,11 +40,19 @@ class Boot extends Phaser.Scene {
     this.load.image('potion', 'assets/images/objects/potion.png');
     this.load.image('crateGreen', 'assets/images/objects/crate_metal-green.png');
     this.load.image('crateOrange', 'assets/images/objects/crate_metal-orange.png');
+    this.load.image('iceGem', 'assets/images/objects/ice_gem.png');
+    this.load.image('fireGem', 'assets/images/objects/fire_gem.png');
 
+    //Load in the sound effects
+    this.load.audio('potionMixSfx', 'assets/sounds/cauldronMixSfx.mp3');
+    this.load.audio('fireballSfx', 'assets/sounds/fireballSfx.mp3');
+    this.load.audio('woodBurnSfx', 'assets/sounds/wood_burn_sfx.mp3');
 
     //Load in the objectives
     this.load.image('earthCrystal', 'assets/images/earth_crystal.png');
 
+    //Load in atlas for animations
+    this.load.atlas('rain_frames', 'assets/atlas/rain/rain.png', 'assets/atlas/rain/rain_atlas.json');
 
     this.load.on('complete', () => { this.scene.start('play'); });
   }

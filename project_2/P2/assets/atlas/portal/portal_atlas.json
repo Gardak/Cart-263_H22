@@ -1,0 +1,502 @@
+{
+    "frames": [
+        {
+            "filename": "lightspeed_0",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 0,
+                "y": 0
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_1",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 480,
+                "y": 0
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_2",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 960,
+                "y": 0
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_3",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 1440,
+                "y": 0
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_4",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 1920,
+                "y": 0
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_5",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 2400,
+                "y": 0
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_6",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 0,
+                "y": 253
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_7",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 480,
+                "y": 253
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_8",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 960,
+                "y": 253
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_9",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 1440,
+                "y": 253
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_10",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 1920,
+                "y": 253
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_11",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 2400,
+                "y": 253
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_12",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 0,
+                "y": 506
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_13",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 480,
+                "y": 506
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_14",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 960,
+                "y": 506
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_15",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 1440,
+                "y": 506
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_16",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 1920,
+                "y": 506
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_17",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 2400,
+                "y": 506
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_18",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 0,
+                "y": 759
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_19",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 480,
+                "y": 759
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_20",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 960,
+                "y": 759
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_21",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 1440,
+                "y": 759
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_22",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 1920,
+                "y": 759
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_23",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 2400,
+                "y": 759
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_24",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 0,
+                "y": 1012
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_25",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 480,
+                "y": 1012
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_26",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 960,
+                "y": 1012
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_27",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 1440,
+                "y": 1012
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_28",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 1920,
+                "y": 1012
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_29",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 2400,
+                "y": 1012
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_30",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 0,
+                "y": 1265
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_31",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 480,
+                "y": 1265
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_32",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 960,
+                "y": 1265
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_33",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 1440,
+                "y": 1265
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_34",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 1920,
+                "y": 1265
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_35",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 2400,
+                "y": 1265
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_36",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 0,
+                "y": 1518
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "lightspeed_37",
+            "frame": {
+                "w": 480,
+                "h": 253,
+                "x": 480,
+                "y": 1518
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        }
+    ],
+    "meta": {
+        "description": "Atlas generado con Atlas Packer Gamma V2",
+        "web": "https://gammafp.github.io/atlas-packer-phaser/"
+    }
+}

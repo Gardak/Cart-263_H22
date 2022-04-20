@@ -10,40 +10,50 @@ class Play extends Phaser.Scene {
 
     let groundFloorY = config.height - 25;
 
-    this.lights.enable().setAmbientColor(0x333333);
-    this.lanternLight = this.lights.addLight(180, 80, 200).setColor(0xfffa94).setIntensity(2);
-
+    //---------setColor to setAmbientColor 0x000000
+    this.lights.enable().setAmbientColor(0x6e6e6e);
 
     //Insert the brick wall background
     this.background = this.add.image(this.scale.width/2,this.scale.height/2, "brickWall");
 
-    //Place the game's platforms
-    this.platform1 = this.physics.add.sprite( 150, this.scale.height-190, 'platform1')
-    this.platform1.body.allowGravity = false;
-    this.platform1.body.immovable = true;
+    //Place the pillars for the gems
+    this.firePillar = this.physics.add.sprite( this.scale.width/2 - 200, this.scale.height - 90, "firePillar");
+    this.firePillar.body.allowGravity = false;
+    this.firePillar.body.immovable = true;
+    this.firePillarLight = this.lights.addLight(this.firePillar.x, this.firePillar.y, 100).setColor(0xcf1a02).setIntensity(2);
+    this.firePillarLight.setVisible(false);
 
-    this.platform3 = this.physics.add.sprite( 390, this.scale.height-70, 'platform3')
-    this.platform3.body.allowGravity = false;
-    this.platform3.body.immovable = true;
+    this.icePillar = this.physics.add.sprite( this.scale.width/2 + 200, this.scale.height - 90, "icePillar");
+    this.icePillar.body.allowGravity = false;
+    this.icePillar.body.immovable = true;
+    this.icePillarLight = this.lights.addLight(this.icePillar.x, this.icePillar.y, 100).setColor(0x00bae8).setIntensity(2);
+    this.icePillarLight.setVisible(false);
 
-    //Place the pillars and the exit door
-    this.firePillar = this.add.sprite(this.scale.width/2 - 200,this.scale.height - 90, "firePillar");
-    this.icePillar = this.add.sprite(this.scale.width/2 + 200,this.scale.height - 90, "icePillar");
-    this.stoneGate = this.add.sprite(this.scale.width/2,this.scale.height - 250, "stoneGate");
-
-    //Place the elements for the cloud potion puzzle
-    this.cauldron = this.physics.add.sprite(this.scale.width - 400,this.scale.height - 75, "cauldron");
-    this.cauldron.body.allowGravity = false;
-    this.cauldron.body.immovable = true;
-
-    this.cauldronFire = this.lights.addLight(this.scale.width - 400, this.scale.height, 100).setColor(0xF62100).setIntensity(2);
-    this.potion = this.physics.add.sprite(this.scale.width - 300,this.scale.height - 435, "potion")
+    //Create both gems for the portal
+    this.iceGem = this.physics.add.sprite( this.scale.width - 50, this.scale.height/6, "iceGem")
       .setInteractive()
       .setDamping(true)
       .setDrag(0.01, 1)
       .setCollideWorldBounds(true);
-    this.input.setDraggable(this.potion);
-    this.potionLight = this.lights.addLight(this.scale.width - 300,this.scale.height - 435, 50).setColor(0x0352fc).setIntensity(2);
+    this.input.setDraggable(this.iceGem);
+    this.iceGemLight = this.lights.addLight( this.iceGem.x, this.iceGem.y, 60).setColor(0x0352fc).setIntensity(2);
+
+    this.fireGem = this.physics.add.sprite( this.scale.width - 50, this.scale.height/6, "fireGem")
+      .setInteractive()
+      .setDamping(true)
+      .setDrag(0.01, 1)
+      .setCollideWorldBounds(true);
+    this.input.setDraggable(this.fireGem);
+    this.fireGemLight = this.lights.addLight( this.fireGem.x, this.fireGem.y, 60).setColor(0xcf1a02).setIntensity(2);
+
+    this.stoneGate = this.add.sprite(this.scale.width/2,this.scale.height - 250, "stoneGate");
+
+    //Place the cauldron behind the avatar
+    this.cauldronX = this.scale.width - 400;
+    this.cauldronY = this.scale.height - 75;
+    this.cauldron = this.physics.add.sprite( this.cauldronX, this.cauldronY, "cauldron");
+    this.cauldron.body.allowGravity = false;
+    this.cauldron.body.immovable = true;
 
     //create the player's avatar
     this.avatarStartX = 150;
@@ -52,10 +62,82 @@ class Play extends Phaser.Scene {
     this.avatar.scepterX = 20;
     this.avatar.setCollideWorldBounds(true);
 
+    //Place the animations
+    const rainAnimConfig = {
+      key: 'raining',
+      frames: 'rain_frames',
+      frameRate: 30,
+      repeat: -1
+    };
+    this.anims.create(rainAnimConfig);
+
+    const rain = this.add.sprite( 155, 0, 'rain_frames', 'frame_000');
+
+    //Place the game's platforms
+    this.platform1 = this.physics.add.sprite( 150, this.scale.height-190, 'platform1');
+    this.platform1.body.allowGravity = false;
+    this.platform1.body.immovable = true;
+
+    this.platform3 = this.physics.add.sprite( 390, this.scale.height-70, 'platform3');
+    this.platform3.body.allowGravity = false;
+    this.platform3.body.immovable = true;
+
+    this.doorOffice = this.physics.add.sprite( this.scale.width-250, 170, 'doorOffice');
+    this.doorOffice.body.allowGravity = false;
+    this.doorOffice.body.immovable = true;
+    this.doorOfficeLight = this.lights.addLight( this.doorOffice.x, this.doorOffice.y, 80).setColor(0xF62100).setIntensity(2);
+    this.doorOfficeLight.setVisible(false);
+
+    this.wallOffice = this.physics.add.sprite( this.scale.width-250, 0, 'platform4');
+    this.wallOffice.body.allowGravity = false;
+    this.wallOffice.body.immovable = true;
+
+    this.platform4 = this.physics.add.sprite( this.scale.width-150, this.scale.height/4, 'platform1');
+    this.platform4.body.allowGravity = false;
+    this.platform4.body.immovable = true;
+
+    this.balcony = this.physics.add.sprite( 150, 245, 'platform1');
+    this.balcony.body.allowGravity = false;
+    this.balcony.body.immovable = true;
+
+    this.balconyWall = this.physics.add.sprite( 350, 127, 'balconyWall');
+    this.balconyWall.body.allowGravity = false;
+    this.balconyWall.body.immovable = true;
+
+    //Place the elements for the cloud potion puzzle
+    this.cauldronFire = this.lights.addLight(this.cauldronX, this.scale.height, 110).setColor(0xF62100).setIntensity(2);
+    this.potion = this.physics.add.sprite( this.cauldronX + 100, this.scale.height - 435, "potion")
+      .setInteractive()
+      .setDamping(true)
+      .setDrag(0.01, 1)
+      .setCollideWorldBounds(true);
+    this.input.setDraggable(this.potion);
+    this.potionLight = this.lights.addLight( this.cauldronX + 100, this.scale.height - 435, 50).setColor(0x0352fc).setIntensity(2);
+    this.potionMixSfx = this.sound.add('potionMixSfx');
+
+    //Create a slow floating platform
+    this.cloud = this.physics.add.sprite( this.cauldronX, this.cauldronY - 100, "cloud")
+      .setGravity(0, -8000)
+      .setDamping(true)
+      .setDrag(1, 0.00000000001)
+      .setCollideWorldBounds(true);
+    this.cloud.setVisible(false);
+    this.cloud.timer = 0;
+    this.cloud.sfx = false;
+    this.cloudLight = this.lights.addLight( this.cauldronX, this.cauldronY - 100, 75).setColor(0xffffff).setIntensity(0.2);
+    this.cloudLight.setVisible(false);
+
     //Create the fireball spell
     this.FireballGroup = new FireballGroup(this);
-    this.fireballOut = -200;
-    this.lightFireball = this.lights.addLight( this.fireballOut, this.fireballOut, 80).setColor(0xF62100).setIntensity(2);
+    this.outOfBounds = -200;
+    this.lightFireball = this.lights.addLight( this.outOfBounds, this.outOfBounds, 80).setColor(0xF62100).setIntensity(2);
+    this.fireballSfx = this.sound.add( 'fireballSfx', {volume: 0.3});
+    this.woodBurnSfx = this.sound.add( 'woodBurnSfx', {volume: 1});
+
+    //Effects for the telekinesis spell
+    this.telekinesisLight = this.lights.addLight( this.outOfBounds, this.outOfBounds, 150).setColor(0x690c94).setIntensity(1.3);
+    this.telekinesisLight.setVisible(false);
+    this.telekinesisLight.maxed = false;
 
     //Create a wooden platform
     //this.woodPlatform =
@@ -71,6 +153,7 @@ class Play extends Phaser.Scene {
       .setDrag(0.01, 1)
       .setCollideWorldBounds(true);
     this.input.setDraggable(this.lantern);
+    this.lanternLight = this.lights.addLight(180, 80, 200).setColor(0xfffa94).setIntensity(2);
 
     this.crateGreen = this.physics.add.sprite( 50, this.avatarStartY - 20, "crateGreen")
       .setInteractive()
@@ -85,16 +168,6 @@ class Play extends Phaser.Scene {
       .setDrag(0.0001, 1)
       .setCollideWorldBounds(true);
     this.input.setDraggable(this.crateOrange);
-
-    //Create a slow floating platform
-    this.cloud = this.physics.add.sprite(100, 800, "cloud")
-      .setInteractive()
-      .setGravity(0, -4000)
-      .setDamping(true)
-      .setDrag(1, 0.00000000001)
-      .setCollideWorldBounds(true);
-
-    this.input.setDraggable(this.cloud);
 
     //Create the "stairs" on the right
     let platformStairX = this.scale.width-50;
@@ -137,9 +210,9 @@ class Play extends Phaser.Scene {
       this.physics.add.collider(this.platformStair, this.potion);
     }
 
-    this.platform4 = this.physics.add.sprite( this.scale.width - 310, this.scale.height-290, 'platform4')
-    this.platform4.body.allowGravity = false;
-    this.platform4.body.immovable = true;
+    this.wallStairs = this.physics.add.sprite( this.scale.width - 310, this.scale.height-290, 'platform4')
+    this.wallStairs.body.allowGravity = false;
+    this.wallStairs.body.immovable = true;
 
     //Create the spell slots for the player
     let spellBarX = 25;
@@ -166,9 +239,9 @@ class Play extends Phaser.Scene {
 
     //Add collision between objects
     this.physics.add.collider(this.avatar, this.grounds);
-    this.physics.add.collider(this.avatar, this.lantern);
     this.physics.add.collider(this.avatar, this.cloud);
     this.physics.add.collider(this.avatar, this.potion);
+    this.physics.add.collider(this.avatar, this.doorOffice);
 
     this.physics.add.collider(this.lantern, this.cloud);
     this.physics.add.collider(this.lantern, this.FireballGroup);
@@ -186,6 +259,7 @@ class Play extends Phaser.Scene {
     this.physics.add.collider(this.crateGreen, this.cloud);
     this.physics.add.collider(this.crateGreen, this.grounds);
     this.physics.add.collider(this.crateGreen, this.potion);
+    this.physics.add.collider(this.crateGreen, this.crateOrange);
 
     this.physics.add.collider(this.crateOrange, this.FireballGroup);
     this.physics.add.collider(this.crateOrange, this.avatar);
@@ -194,26 +268,55 @@ class Play extends Phaser.Scene {
     this.physics.add.collider(this.crateOrange, this.grounds);
     this.physics.add.collider(this.crateOrange, this.potion);
 
+    this.physics.add.collider(this.iceGem, this.FireballGroup);
+    this.physics.add.collider(this.iceGem, this.avatar);
+    this.physics.add.collider(this.iceGem, this.lantern);
+    this.physics.add.collider(this.iceGem, this.cloud);
+    this.physics.add.collider(this.iceGem, this.grounds);
+    this.physics.add.collider(this.iceGem, this.icePillar, this.iceGemPlaced);
+
     this.physics.add.collider(this.platform1, this.FireballGroup);
     this.physics.add.collider(this.platform1, this.avatar);
     this.physics.add.collider(this.platform1, this.lantern);
-    this.physics.add.collider(this.platform1, this.cloud);
     this.physics.add.collider(this.platform1, this.crateGreen);
+    this.physics.add.collider(this.platform1, this.crateOrange);
     this.physics.add.collider(this.platform1, this.potion);
+    this.physics.add.collider(this.platform1, this.iceGem);
 
     this.physics.add.collider(this.platform3, this.FireballGroup);
     this.physics.add.collider(this.platform3, this.avatar);
     this.physics.add.collider(this.platform3, this.lantern);
-    this.physics.add.collider(this.platform3, this.cloud);
     this.physics.add.collider(this.platform3, this.crateGreen);
+    this.physics.add.collider(this.platform3, this.crateOrange);
     this.physics.add.collider(this.platform3, this.potion);
+    this.physics.add.collider(this.platform3, this.iceGem);
 
     this.physics.add.collider(this.platform4, this.FireballGroup);
     this.physics.add.collider(this.platform4, this.avatar);
     this.physics.add.collider(this.platform4, this.lantern);
-    this.physics.add.collider(this.platform4, this.cloud);
     this.physics.add.collider(this.platform4, this.crateGreen);
+    this.physics.add.collider(this.platform4, this.crateOrange);
     this.physics.add.collider(this.platform4, this.potion);
+    this.physics.add.collider(this.platform4, this.iceGem);
+
+    this.physics.add.collider(this.balcony, this.FireballGroup);
+    this.physics.add.collider(this.balcony, this.avatar);
+    this.physics.add.collider(this.balcony, this.lantern);
+    this.physics.add.collider(this.balcony, this.crateGreen);
+    this.physics.add.collider(this.balcony, this.crateOrange);
+    this.physics.add.collider(this.balcony, this.fireGem);
+    this.physics.add.collider(this.balcony, this.iceGem);
+
+    this.physics.add.collider(this.wallStairs, this.FireballGroup);
+    this.physics.add.collider(this.wallStairs, this.avatar);
+
+    this.physics.add.collider(this.wallStairs, this.FireballGroup);
+    this.physics.add.collider(this.wallStairs, this.avatar);
+
+    this.physics.add.collider(this.doorOffice, this.FireballGroup, this.woodBurn);
+
+
+    rain.play('raining');
 
     //create inputs to move the avatar around
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -229,6 +332,8 @@ class Play extends Phaser.Scene {
     this.crateGreen.setPipeline('Light2D');
     this.crateOrange.setPipeline('Light2D');
     this.potion.setPipeline('Light2D');
+    this.iceGem.setPipeline('Light2D');
+    this.fireGem.setPipeline('Light2D');
 
     this.firePillar.setPipeline('Light2D');
     this.icePillar.setPipeline('Light2D');
@@ -240,6 +345,12 @@ class Play extends Phaser.Scene {
     this.platform1.setPipeline('Light2D');
     this.platform3.setPipeline('Light2D');
     this.platform4.setPipeline('Light2D');
+    this.balcony.setPipeline('Light2D');
+    this.wallStairs.setPipeline('Light2D');
+    this.wallOffice.setPipeline('Light2D');
+    this.doorOffice.setPipeline('Light2D');
+
+    rain.setPipeline('Light2D');
 
     //Create inputs to toggle spells
     this.key1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
@@ -251,6 +362,7 @@ class Play extends Phaser.Scene {
     this.handleInput();
     this.handleSpells();
     this.handlePhysics();
+    this.handleObjectives();
   }
 
   //Setup the inputs to control the avatar
@@ -295,6 +407,18 @@ class Play extends Phaser.Scene {
       }
 
       this.telekinesisCircle.rotation += 0.001;
+
+      if (this.telekinesisLight.maxed){
+        this.telekinesisLight.radius -= 0.5;
+      } else {
+        this.telekinesisLight.radius += 0.5;
+      }
+
+      if (this.telekinesisLight.radius >= 150){
+        this.telekinesisLight.maxed = true;
+      } else if(this.telekinesisLight.radius <= 75) {
+        this.telekinesisLight.maxed = false;
+      }
   }
 
   handlePhysics(){
@@ -304,26 +428,94 @@ class Play extends Phaser.Scene {
     this.potionLight.x = this.potion.x;
     this.potionLight.y = this.potion.y;
 
+    this.iceGemLight.x = this.iceGem.x;
+    this.iceGemLight.y = this.iceGem.y;
+
+    this.fireGemLight.x = this.fireGem.x;
+    this.fireGemLight.y = this.fireGem.y;
+
     this.cauldronFire.intensity += 0.1;
     if (this.cauldronFire.intensity >= 3){
       this.cauldronFire.intensity = 1.5;
     }
+
     if (!this.potion.active) {
         this.potionLight.setVisible(false);
+        this.cloudLight.setVisible(true);
+        this.cloudLight.x = this.cloud.x;
+        this.cloudLight.y = this.cloud.y;
+        this.cloudPotion();
+    }
+
+    if (this.doorOffice.isBurning && this.doorOffice.active){
+      if (!this.woodBurnSfx.played) {
+        this.woodBurnSfx.play();
+        this.woodBurnSfx.played = true;
+      }
+      this.doorOfficeLight.setVisible(true);
+      this.doorOffice.burnTimer -= 1;
+
+      this.doorOfficeLight.intensity += 0.07;
+      if (this.doorOfficeLight.intensity >= 3){
+        this.doorOfficeLight.intensity = 1.5;
+      }
+
+      if (this.doorOffice.burnTimer <= 0){
+        this.doorOffice.setActive(false);
+        this.doorOffice.setVisible(false);
+        this.doorOfficeLight.setVisible(false);
+        this.doorOffice.destroy();
+      }
+    }
+  }
+
+  handleObjectives() {
+    if (this.iceGem.isPlaced){
+      this.icePillar.setTint(0x00bae8);
+      this.icePillarLight.setVisible(true);
     }
   }
 
   potionMix(potion) {
     potion.setVisible(false);
     potion.setActive(false);
+  }
 
+  cloudPotion() {
+    if (this.cloud.y <= 70){
+      this.cloud.timer = 90;
+      if (!this.cloud.sfx){
+        this.potionMixSfx.play();
+        this.cloud.sfx = true;
+      }
+    }
+
+    this.cloud.timer -= 1;
+
+    if (this.cloud.timer >= 0 || !this.cloud.visible){
+      this.cloud.y = this.cauldron.y - 40;
+    }
+
+    this.cloud.x = this.cauldron.x;
+
+    this.cloud.setVisible(true);
+  }
+
+  woodBurn(wood) {
+    wood.setTint(0x5c0000);
+    wood.burnTimer = 180;
+    wood.isBurning = true;
+  }
+
+  iceGemPlaced(iceGem){
+    iceGem.isPlaced = true;
   }
 
   onDrag(pointer, object, dragX, dragY, avatar) {
 
     this.telekinesisLenght = Phaser.Math.Distance.Between( this.avatar.x, this.avatar.y, object.x, object.y);
-
-    if (this.spellSelected !== "telekinesis" || this.telekinesisLenght > this.telekinesisLenghtMax) {
+//|| this.telekinesisLenght > this.telekinesisLenghtMax      ---add in the if statement
+    if (this.spellSelected !== "telekinesis" ) {
       this.onDragEnd( pointer, object);
       return;
     }
@@ -331,6 +523,9 @@ class Play extends Phaser.Scene {
 
     object.x = dragX;
     object.y = dragY;
+
+    this.telekinesisLight.x = object.x;
+    this.telekinesisLight.y = object.y;
 
     if (this.orbGroupLine) {
       this.orbGroupLine.setActive(false).setVisible(false);
@@ -350,6 +545,7 @@ class Play extends Phaser.Scene {
     this.telekinesisCircle.y = this.avatar.y;
     this.telekinesisCircle.setVisible(true);
 
+    this.telekinesisLight.setVisible(true);
 
     Phaser.Actions.PlaceOnLine(this.orbGroupLine.getChildren(), this.grabLine);
     object.body.allowGravity = false;
@@ -364,23 +560,10 @@ class Play extends Phaser.Scene {
 
     this.orbGroupLine.setActive(false).setVisible(false);
     this.telekinesisCircle.setVisible(false);
+    this.telekinesisLight.setVisible(false);
 
     object.body.allowGravity = true;
     object.body.immovable = false;
-    // switch (object.texture.key) {
-    //
-    //   case "cloud":
-    //   case "crateGreen":
-    //   case "crateOrange":
-    //   case "lantern":
-    //   object.body.allowGravity = true;
-    //   object.body.immovable = false;
-    //   break;
-    //
-    //   case "platformDrag":
-    //     break;
-    //
-    // }
   }
 
 //Function called when the player mouse clicks with the fireball spell selected
@@ -395,8 +578,14 @@ launchFireball() {
       pointer.x,
       pointer.y
     );
+
     let pX = pointer.x;
     let pY = pointer.y;
+
+    if(!this.FireballGroup.children.entries[0].active){
+      this.fireballSfx.play();
+    }
+
     this.FireballGroup.sendFireball(this.avatar.x + this.avatar.scepterX, this.avatar.y - 20, angle, pX, pY);
 
   });
@@ -471,8 +660,8 @@ class Fireball extends Phaser.Physics.Arcade.Sprite {
     this.setVisible(false);
     this.isFlying = false;
 
-    this.x = this.fireballOut;
-    this.y = this.fireballOut;
+    this.x = this.outOfBounds;
+    this.y = this.outOfBounds;
     this.isFlying = false;
   }
 
