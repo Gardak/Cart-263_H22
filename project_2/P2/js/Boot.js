@@ -52,7 +52,7 @@ class Boot extends Phaser.Scene {
     this.load.audio('woodBurnSfx', 'assets/sounds/wood_burn_sfx.mp3');
     this.load.audio('pillarSfx', 'assets/sounds/pillar_sfx.mp3');
     this.load.audio('rainLoopSfx', 'assets/sounds/rain_loop_sfx.mp3');
-    this.load.audio('gameSt', 'assets/sounds/game_St.mp3');
+    this.load.audio('gameSt', 'assets/sounds/game_st.mp3');
 
     //Load in atlas for animations
     this.load.atlas('rain_frames', 'assets/atlas/rain/rain.png', 'assets/atlas/rain/rain_atlas.json');
